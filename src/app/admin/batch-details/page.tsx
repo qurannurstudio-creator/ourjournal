@@ -107,8 +107,11 @@ function BatchDetailsContent() {
   const indexedBlogs = blogs.filter(b => !!b.indexed_at);
 
   const chunks: any[][] = [];
-  for (let i = 0; i < pendingBlogs.length; i += 200) {
-    chunks.push(pendingBlogs.slice(i, i + 200));
+  if (pendingBlogs.length > 0) {
+    chunks.push(pendingBlogs.slice(0, 200));
+    if (pendingBlogs.length > 200) {
+      chunks.push(pendingBlogs.slice(200));
+    }
   }
 
   const copyChunkLinks = (chunk: any[], index: number) => {
