@@ -1,13 +1,28 @@
-import AutoRedirect from '@/components/AutoRedirect';
+import { getBlogPosts } from '@/lib/sheets';
+import HomePageGrid from '@/components/HomePageGrid';
 
-export default function Home() {
+export default async function Home() {
+  const allPosts = await getBlogPosts();
+  
+  // Shuffle all posts on the server at build time
+  const shuffled = [...allPosts];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  
+  // Select 100 posts for the client pool and strip heavy content to keep payload ultra-light
+  const pool = shuffled.slice(0, 100).map(post => ({
+    title: post.title,
+    slug: post.slug,
+    image: post.image,
+    date: post.date,
+    tags: post.tags,
+  }));
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 text-center">
-      <AutoRedirect />
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to Modern Journal</h1>
-      <p className="text-gray-600 max-w-lg mx-auto">
-        Discover insightful articles and comprehensive deep-dives into modern psychology, lifestyle, and relationships.
-      </p>
+    <div className="min-h-screen bg-slate-50 font-sans selection:bg-blue-200">
+      <HomePageGrid initialPosts={pool} />
     </div>
   );
 }
