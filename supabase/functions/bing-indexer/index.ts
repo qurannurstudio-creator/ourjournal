@@ -39,7 +39,13 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Bing API Error:', errorText);
-      return new Response(JSON.stringify({ error: 'Failed to submit to Bing API' }), {
+      let bingErrorMsg = 'Failed to submit to Bing API';
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.Message) bingErrorMsg = parsed.Message;
+      } catch(e) {}
+
+      return new Response(JSON.stringify({ error: bingErrorMsg }), {
         status: response.status,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });

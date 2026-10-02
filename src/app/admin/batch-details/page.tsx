@@ -145,8 +145,8 @@ function BatchDetailsContent() {
     }
 
     const subChunks = [];
-    for (let i = 0; i < chunk.length; i += 100) {
-      subChunks.push(chunk.slice(i, i + 100));
+    for (let i = 0; i < chunk.length; i += 50) {
+      subChunks.push(chunk.slice(i, i + 50));
     }
 
     try {
@@ -190,8 +190,8 @@ function BatchDetailsContent() {
     setBingProgress(0);
     
     const subChunks = [];
-    for (let i = 0; i < chunk.length; i += 100) {
-      subChunks.push(chunk.slice(i, i + 100));
+    for (let i = 0; i < chunk.length; i += 50) {
+      subChunks.push(chunk.slice(i, i + 50));
     }
 
     try {
