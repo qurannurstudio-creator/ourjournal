@@ -77,22 +77,42 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       </header>
 
-      {/* JSON-LD Article Schema for SEO */}
+      {/* JSON-LD Schemas for SEO */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            "headline": post.title,
-            "description": post.description,
-            "image": post.image.startsWith('http') ? post.image : `https://${post.image}`,
-            "datePublished": new Date().toISOString(), // Assuming post.Date is string, using current date as fallback or parse it
-            "author": {
-              "@type": "Person",
-              "name": "Our Journal"
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "headline": post.title,
+              "description": post.description,
+              "image": post.image.startsWith('http') ? post.image : `https://${post.image}`,
+              "datePublished": post.date || new Date().toISOString(),
+              "author": {
+                "@type": "Person",
+                "name": "Modern Journal"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://modernjournal.info"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": post.title,
+                  "item": `https://modernjournal.info/${slug}`
+                }
+              ]
             }
-          })
+          ])
         }}
       />
 

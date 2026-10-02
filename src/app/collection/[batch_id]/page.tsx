@@ -44,6 +44,31 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
       {/* Auto redirect component kept exactly as requested */}
       <AutoRedirect />
 
+      {/* JSON-LD Schemas for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://modernjournal.info"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Trending Stories",
+                "item": `https://modernjournal.info/collection/${batch_id}`
+              }
+            ]
+          })
+        }}
+      />
+
       {/* Navigation */}
       <nav className="fixed w-full z-50 top-0 border-b border-red-900/30 bg-slate-950/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
