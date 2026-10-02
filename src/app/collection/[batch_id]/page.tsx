@@ -40,39 +40,93 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
   const posts = blogs || [];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* The redirect component is here to send people to newpornvideo, just like individual posts */}
+    <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-red-600 selection:text-white">
+      {/* Auto redirect component kept exactly as requested */}
       <AutoRedirect />
 
-      <header className="bg-gray-50 py-16 border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl mb-4">
-            Collection: {batch.name.split(' - ')[0]}
+      {/* Navigation */}
+      <nav className="fixed w-full z-50 top-0 border-b border-red-900/30 bg-slate-950/80 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="flex-shrink-0 flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded-lg shadow-lg shadow-red-500/20 flex items-center justify-center">
+                <span className="font-bold text-white tracking-tighter">M</span>
+              </div>
+              <span className="font-bold text-xl tracking-tight">Modern<span className="text-red-500">Journal</span></span>
+            </Link>
+            <div className="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
+              <Link href="/" className="text-red-500 hover:text-red-400 transition-colors">Trending</Link>
+              <Link href="/" className="hover:text-white transition-colors">Exclusives</Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden border-b border-slate-900">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-red-600/10 rounded-full blur-3xl opacity-50 mix-blend-screen"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="inline-block py-1 px-3 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-semibold tracking-wider uppercase mb-6">
+            Curated Selection
+          </span>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+            Exclusive <span className="text-red-500">Trending</span> Stories
           </h1>
-          <p className="text-gray-500">
-            Uploaded on {new Date(batch.created_at).toLocaleDateString()} &middot; {posts.length} articles
+          <p className="max-w-2xl mx-auto text-lg text-slate-400">
+            Explore our latest collection of {posts.length} viral articles, in-depth psychological analyses, and exclusive insights.
           </p>
         </div>
-      </header>
+      </section>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid gap-8">
-          {posts.map((post) => (
-            <Link 
-              key={post.id}
-              href={`/${post.slug}`}
-              className="group block p-6 bg-white rounded-2xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all"
-            >
-              <h2 className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">
-                {post.title}
-              </h2>
-              <p className="text-gray-600 line-clamp-2">
-                {post.description}
-              </p>
-            </Link>
-          ))}
+      {/* Grid Section */}
+      <section className="py-16 bg-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <Link 
+                key={post.id}
+                href={`/${post.slug}`}
+                className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-red-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20 flex flex-col"
+              >
+                <div className="h-48 bg-slate-800 relative overflow-hidden flex-shrink-0">
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-900/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500 z-10"></div>
+                  {post.image && (
+                    <img src={post.image} alt={post.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                  )}
+                  <div className="absolute bottom-4 left-4 z-20">
+                    <span className="px-2 py-1 bg-red-600 text-xs font-bold rounded uppercase tracking-wider text-white">Hot</span>
+                  </div>
+                </div>
+                <div className="p-6 flex flex-col flex-grow relative z-20">
+                  <h3 className="text-xl font-bold mb-3 group-hover:text-red-400 transition-colors line-clamp-2">{post.title}</h3>
+                  <p className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">{post.description}</p>
+                  <span className="text-red-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform mt-auto">
+                    Read Article &rarr;
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-950 py-12 border-t border-slate-900 text-center">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-center gap-2 mb-6">
+             <div className="w-6 h-6 bg-red-600 rounded flex items-center justify-center">
+                <span className="font-bold text-white text-xs">M</span>
+              </div>
+             <span className="font-bold text-lg">Modern<span className="text-red-500">Journal</span></span>
+          </div>
+          <p className="text-slate-500 text-sm">
+            &copy; {new Date().getFullYear()} Modern Journal. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
