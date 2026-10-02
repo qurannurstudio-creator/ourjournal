@@ -375,22 +375,34 @@ function BatchDetailsContent() {
                 </div>
                 <div className="flex gap-2">
                   {isFirstChunk && (
-                    <>
-                      <button
-                        onClick={() => handleSendToGoogle(chunk)}
-                        disabled={isIndexing || quotaRemaining <= 0}
-                        className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors shadow-sm border bg-green-600 text-white hover:bg-green-700 border-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    <div className="flex items-center gap-2">
+                      <select
+                        id={`engine-select-${chunkIndex}`}
+                        className="text-xs font-medium px-2 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                        defaultValue="both"
                       >
-                        {isIndexing ? `Sending... ${indexingProgress}/${Math.min(chunk.length, quotaRemaining)}` : quotaRemaining <= 0 ? 'Quota Exhausted' : 'Send to Google'}
-                      </button>
+                        <option value="both">Google & Bing</option>
+                        <option value="google">Google Only</option>
+                        <option value="bing">Bing Only</option>
+                      </select>
                       <button
-                        onClick={() => handleSendToBing(chunk)}
-                        disabled={isBingIndexing}
-                        className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors shadow-sm border bg-teal-600 text-white hover:bg-teal-700 border-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={async () => {
+                          const selectEl = document.getElementById(`engine-select-${chunkIndex}`) as HTMLSelectElement;
+                          const engine = selectEl.value;
+                          
+                          if (engine === 'both' || engine === 'bing') {
+                            await handleSendToBing(chunk);
+                          }
+                          if (engine === 'both' || engine === 'google') {
+                            await handleSendToGoogle(chunk);
+                          }
+                        }}
+                        disabled={isIndexing || isBingIndexing}
+                        className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors shadow-sm border bg-indigo-600 text-white hover:bg-indigo-700 border-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isBingIndexing ? `Sending... ${bingProgress}/${chunk.length}` : 'Send to Bing'}
+                        {(isIndexing || isBingIndexing) ? 'Sending...' : 'Send to Indexer'}
                       </button>
-                    </>
+                    </div>
                   )}
                   <button 
                     onClick={() => copyChunkLinks(chunk, chunkIndex)}

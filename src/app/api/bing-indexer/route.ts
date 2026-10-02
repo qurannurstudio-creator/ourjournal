@@ -31,18 +31,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Failed to submit to Bing API' }, { status: response.status });
     }
 
-    // 2. Update Supabase blogs table to mark as indexed
-    if (blogIds && blogIds.length > 0) {
-      const { error: updateError } = await supabase
-        .from('blogs')
-        .update({ indexed_at: new Date().toISOString() })
-        .in('id', blogIds);
-
-      if (updateError) {
-        console.error('Error updating indexed_at in Supabase:', updateError);
-        // We continue because Bing submission was successful
-      }
-    }
+    // 2. We do NOT update indexed_at here. 
+    // We only update indexed_at for Google submissions to manage the 200/day quota tables.
+    // Bing has a 10,000/day quota, so we don't need strict table movement for it.
 
     // 3. Log to indexing_logs
     const today = new Date().toISOString().split('T')[0];
