@@ -6,39 +6,59 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Toaster } from 'react-hot-toast';
 
 import { QuotaTracker } from '@/components/admin/QuotaTracker';
+import { supabase } from '@/lib/supabase';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isChecking, setIsChecking] = useState(true);
+  const [loginError, setLoginError] = useState('');
+  
   const pathname = usePathname();
   const router = useRouter();
-  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const auth = sessionStorage.getItem('adminAuth');
-    if (auth === 'true') {
-      setIsAuthenticated(true);
+    // Check active session
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setIsAuthenticated(true);
+      } else if (pathname !== '/admin') {
+        router.push('/admin');
+      }
       setIsChecking(false);
-    } else if (pathname !== '/admin') {
-      router.push('/');
-    } else {
-      setIsChecking(false);
-    }
+    };
+    
+    checkSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+      if (!session && pathname !== '/admin') {
+        router.push('/admin');
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [pathname, router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'AdminSecure2026!') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('adminAuth', 'true');
-    } else {
-      alert('Incorrect password');
+    setLoginError('');
+    
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      setLoginError(error.message);
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    sessionStorage.removeItem('adminAuth');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
   };
 
   if (isChecking) {
@@ -50,11 +70,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
         <form onSubmit={handleLogin} className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm max-w-sm w-full">
           <h1 className="text-2xl font-semibold tracking-tight mb-6 text-center text-slate-900">Admin Login</h1>
+          {loginError && <p className="text-sm text-red-600 mb-4 text-center font-medium bg-red-50 p-2 rounded">{loginError}</p>}
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email Address"
+            required
+            className="w-full px-3 py-2 border border-slate-200 rounded-md mb-4 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-all text-sm"
+          />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            required
             className="w-full px-3 py-2 border border-slate-200 rounded-md mb-4 focus:ring-2 focus:ring-slate-900 focus:outline-none transition-all text-sm"
           />
           <button type="submit" className="w-full bg-slate-900 text-slate-50 py-2 rounded-md hover:bg-slate-800 transition-colors text-sm font-medium">
