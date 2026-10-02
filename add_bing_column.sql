@@ -1,0 +1,1 @@
+ALTER TABLE blogs ADD COLUMN bing_indexed_at TIMESTAMP WITH TIME ZONE;

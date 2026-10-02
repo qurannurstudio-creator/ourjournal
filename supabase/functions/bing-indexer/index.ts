@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "npm:@supabase/supabase-js";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { urls } = await req.json();
+    const { urls, blogIds } = await req.json();
 
     if (!urls || !Array.isArray(urls) || urls.length === 0) {
       return new Response(JSON.stringify({ error: 'No URLs provided' }), {
@@ -49,6 +50,18 @@ serve(async (req) => {
         status: response.status,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
+    }
+
+    // Update Supabase Blogs
+    if (blogIds && Array.isArray(blogIds) && blogIds.length > 0) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      await supabase
+        .from('blogs')
+        .update({ bing_indexed_at: new Date().toISOString() })
+        .in('id', blogIds);
     }
 
     return new Response(JSON.stringify({ success: true, count: urls.length }), {

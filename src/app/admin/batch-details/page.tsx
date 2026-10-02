@@ -103,8 +103,8 @@ function BatchDetailsContent() {
     }
   };
 
-  const pendingBlogs = blogs.filter(b => !b.indexed_at);
-  const indexedBlogs = blogs.filter(b => !!b.indexed_at);
+  const pendingBlogs = blogs.filter(b => !b.indexed_at || !b.bing_indexed_at);
+  const indexedBlogs = blogs.filter(b => !!b.indexed_at && !!b.bing_indexed_at);
 
   const chunks: any[][] = [];
   if (pendingBlogs.length > 0) {
@@ -136,11 +136,17 @@ function BatchDetailsContent() {
       return;
     }
 
+    const filteredChunk = originalChunk.filter(b => !b.indexed_at);
+    if (filteredChunk.length === 0) {
+      toast.success("All selected URLs are already indexed on Google!");
+      return;
+    }
+
     setIsIndexing(true);
     setIndexingProgress(0);
     
-    const chunk = originalChunk.slice(0, quotaRemaining);
-    if (chunk.length < originalChunk.length) {
+    const chunk = filteredChunk.slice(0, quotaRemaining);
+    if (chunk.length < filteredChunk.length) {
       toast.success(`Only sending first ${chunk.length} URLs due to quota limits.`);
     }
 
@@ -185,7 +191,13 @@ function BatchDetailsContent() {
     }
   };
 
-  const handleSendToBing = async (chunk: any[]) => {
+  const handleSendToBing = async (originalChunk: any[]) => {
+    const chunk = originalChunk.filter(b => !b.bing_indexed_at);
+    if (chunk.length === 0) {
+      toast.success("All selected URLs are already sent to Bing!");
+      return;
+    }
+
     setIsBingIndexing(true);
     setBingProgress(0);
     
@@ -206,7 +218,7 @@ function BatchDetailsContent() {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ urls })
+          body: JSON.stringify({ urls, blogIds })
         });
         
         if (!res.ok) {
@@ -450,7 +462,21 @@ function BatchDetailsContent() {
                           {chunkIndex * 200 + index + 1}
                         </td>
                         <td className="px-6 py-2.5 font-medium text-slate-900 truncate max-w-xs">
-                          {blog.title}
+                          <div className="flex items-center gap-2">
+                            <span>{blog.title}</span>
+                            <div className="flex gap-1 shrink-0">
+                              {blog.indexed_at ? (
+                                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold" title="Sent to Google">G</span>
+                              ) : (
+                                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-400 text-[10px] font-bold border border-slate-200" title="Pending Google">G</span>
+                              )}
+                              {blog.bing_indexed_at ? (
+                                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold" title="Sent to Bing">B</span>
+                              ) : (
+                                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-100 text-slate-400 text-[10px] font-bold border border-slate-200" title="Pending Bing">B</span>
+                              )}
+                            </div>
+                          </div>
                         </td>
                         <td className="px-6 py-2.5 font-mono text-xs text-slate-600">
                           <a 
@@ -510,7 +536,13 @@ function BatchDetailsContent() {
                       {index + 1}
                     </td>
                     <td className="px-6 py-2.5 font-medium text-slate-900 truncate max-w-xs">
-                      {blog.title}
+                      <div className="flex items-center gap-2">
+                        <span>{blog.title}</span>
+                        <div className="flex gap-1 shrink-0">
+                          {blog.indexed_at && <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold" title="Sent to Google">G</span>}
+                          {blog.bing_indexed_at && <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold" title="Sent to Bing">B</span>}
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-2.5 font-mono text-xs text-slate-600">
                       <a 
