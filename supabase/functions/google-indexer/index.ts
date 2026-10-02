@@ -94,23 +94,31 @@ serve(async (req) => {
     const token = await getAccessToken(creds.client_email, privateKey);
 
     // Send URLs to Google
+    let successCount = 0;
     const results = await Promise.all(urls.map(async (url) => {
-      const res = await fetch('https://indexing.googleapis.com/v3/urlNotifications:publish', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          url: url,
-          type: 'URL_UPDATED'
-        })
-      });
-      return { url, status: res.status };
+      try {
+        const res = await fetch('https://indexing.googleapis.com/v3/urlNotifications:publish', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            url: url,
+            type: 'URL_UPDATED'
+          })
+        });
+        if (res.ok) {
+          successCount++;
+        }
+        return { url, status: res.status };
+      } catch (err) {
+        return { url, status: 500 };
+      }
     }));
 
     // Update Supabase Blogs
-    if (blogIds && blogIds.length > 0) {
+    if (blogIds && blogIds.length > 0 && successCount > 0) {
       await supabase
         .from('blogs')
         .update({ indexed_at: new Date().toISOString() })
@@ -119,11 +127,18 @@ serve(async (req) => {
 
     // Insert Log
     await supabase.from('indexing_logs').insert({
-      urls_sent: urls.length,
-      status: 'SUCCESS',
+      urls_sent: successCount,
+      status: successCount > 0 ? 'SUCCESS' : 'FAILED',
       batch_id: batchId || null,
       date: today
     });
+
+    if (successCount === 0) {
+      return new Response(JSON.stringify({ error: 'Google API rejected all requests (possibly Quota Exceeded).', results }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
 
     return new Response(JSON.stringify({ success: true, results }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

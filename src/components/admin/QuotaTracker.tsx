@@ -22,6 +22,7 @@ export function QuotaTracker() {
 
     if (error) {
       console.error('Error fetching quota:', error);
+      setUrlsSent(200); // Max it out so it shows red
       return;
     }
 

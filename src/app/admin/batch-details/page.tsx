@@ -58,7 +58,7 @@ function BatchDetailsContent() {
   };
 
   const [chunkCopyStatus, setChunkCopyStatus] = useState<Record<number, string>>({});
-  const [quotaRemaining, setQuotaRemaining] = useState<number>(200);
+  const [quotaRemaining, setQuotaRemaining] = useState<number>(0); // Default to 0 until loaded
 
   useEffect(() => {
     fetchQuota();
@@ -66,13 +66,21 @@ function BatchDetailsContent() {
 
   const fetchQuota = async () => {
     const today = new Date().toISOString().split('T')[0];
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('indexing_logs')
       .select('urls_sent')
       .eq('date', today);
+      
+    if (error) {
+      console.error('Error fetching quota (table might be missing):', error);
+      toast.error('Could not fetch quota. Did you run the SQL code?');
+      setQuotaRemaining(0);
+      return;
+    }
+    
     if (data) {
       const total = data.reduce((acc, log) => acc + (log.urls_sent || 0), 0);
-      setQuotaRemaining(200 - total);
+      setQuotaRemaining(Math.max(0, 200 - total));
     }
   };
 
