@@ -208,8 +208,15 @@ function BatchDetailsContent() {
         });
         
         if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || 'Failed to send to Bing');
+          const text = await res.text();
+          let errorMsg = 'Failed to send to Bing';
+          try {
+            const errorData = JSON.parse(text);
+            errorMsg = errorData.error || errorMsg;
+          } catch(e) {
+            console.error('Non-JSON response from server:', text);
+          }
+          throw new Error(errorMsg);
         }
 
         setBingProgress(prev => prev + subChunk.length);
