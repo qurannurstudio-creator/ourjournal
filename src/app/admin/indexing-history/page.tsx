@@ -80,7 +80,7 @@ export default function IndexingHistoryPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 bg-white">
-                    {dateLogs.map(log => (
+                    {dateLogs.map((log: any) => (
                       <tr key={log.id} className="hover:bg-slate-50 transition-colors">
                         <td className="px-6 py-3 text-slate-600">
                           {new Date(log.created_at).toLocaleTimeString()}
