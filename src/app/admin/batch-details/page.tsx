@@ -199,12 +199,14 @@ function BatchDetailsContent() {
         const urls = subChunk.map(blog => `${MAIN_DOMAIN}/${blog.slug}`);
         const blogIds = subChunk.map(blog => blog.id);
 
-        const res = await fetch('/api/bing-indexer', {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        
+        const res = await fetch(`${supabaseUrl}/functions/v1/bing-indexer`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ urls, blogIds, batchId })
+          body: JSON.stringify({ urls })
         });
         
         if (!res.ok) {
