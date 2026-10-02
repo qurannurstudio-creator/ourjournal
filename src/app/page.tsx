@@ -1,7 +1,10 @@
-import { notFound } from 'next/navigation';
-
 export default function Home() {
-  // Since the user does not want a main site, we can just return a 404
-  // or a simple blank page.
-  notFound();
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 text-center">
+      <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to Modern Journal</h1>
+      <p className="text-gray-600 max-w-lg mx-auto">
+        Discover insightful articles and comprehensive deep-dives into modern psychology, lifestyle, and relationships.
+      </p>
+    </div>
+  );
 }
