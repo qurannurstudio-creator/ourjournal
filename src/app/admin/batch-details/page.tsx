@@ -390,10 +390,17 @@ function BatchDetailsContent() {
                           const selectEl = document.getElementById(`engine-select-${chunkIndex}`) as HTMLSelectElement;
                           const engine = selectEl.value;
                           
-                          if (engine === 'both' || engine === 'bing') {
+                          if (engine === 'both') {
+                            if (quotaRemaining <= 0) {
+                              toast.error("Google quota exhausted! Sending only to Bing...", { duration: 5000 });
+                              await handleSendToBing(chunk);
+                            } else {
+                              await handleSendToBing(chunk);
+                              await handleSendToGoogle(chunk);
+                            }
+                          } else if (engine === 'bing') {
                             await handleSendToBing(chunk);
-                          }
-                          if (engine === 'both' || engine === 'google') {
+                          } else if (engine === 'google') {
                             await handleSendToGoogle(chunk);
                           }
                         }}
