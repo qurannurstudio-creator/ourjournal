@@ -149,7 +149,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
           <button 
             onClick={handleLogout}
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            className="text-sm font-semibold text-slate-600 hover:text-white bg-slate-100 hover:bg-red-600 px-4 py-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-red-500/30"
           >
             Logout
           </button>
