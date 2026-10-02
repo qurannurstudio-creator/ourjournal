@@ -127,6 +127,8 @@ function BatchDetailsContent() {
 
   const [isIndexing, setIsIndexing] = useState(false);
   const [indexingProgress, setIndexingProgress] = useState(0);
+  const [isBingIndexing, setIsBingIndexing] = useState(false);
+  const [bingProgress, setBingProgress] = useState(0);
 
   const handleSendToGoogle = async (originalChunk: any[]) => {
     if (quotaRemaining <= 0) {
@@ -180,6 +182,47 @@ function BatchDetailsContent() {
     } finally {
       setIsIndexing(false);
       setIndexingProgress(0);
+    }
+  };
+
+  const handleSendToBing = async (chunk: any[]) => {
+    setIsBingIndexing(true);
+    setBingProgress(0);
+    
+    const subChunks = [];
+    for (let i = 0; i < chunk.length; i += 100) {
+      subChunks.push(chunk.slice(i, i + 100));
+    }
+
+    try {
+      for (const subChunk of subChunks) {
+        const urls = subChunk.map(blog => `${MAIN_DOMAIN}/${blog.slug}`);
+        const blogIds = subChunk.map(blog => blog.id);
+
+        const res = await fetch('/api/bing-indexer', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ urls, blogIds, batchId })
+        });
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || 'Failed to send to Bing');
+        }
+
+        setBingProgress(prev => prev + subChunk.length);
+        await new Promise(r => setTimeout(r, 1000));
+      }
+      toast.success('Successfully sent to Bing Indexer!');
+      fetchBatchDetails();
+      fetchQuota();
+    } catch (error: any) {
+      toast.error(error.message || 'Error communicating with Bing API');
+    } finally {
+      setIsBingIndexing(false);
+      setBingProgress(0);
     }
   };
 
@@ -332,13 +375,22 @@ function BatchDetailsContent() {
                 </div>
                 <div className="flex gap-2">
                   {isFirstChunk && (
-                    <button
-                      onClick={() => handleSendToGoogle(chunk)}
-                      disabled={isIndexing || quotaRemaining <= 0}
-                      className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors shadow-sm border bg-green-600 text-white hover:bg-green-700 border-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isIndexing ? `Sending... ${indexingProgress}/${Math.min(chunk.length, quotaRemaining)}` : quotaRemaining <= 0 ? 'Quota Exhausted' : 'Send to Google Indexer'}
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handleSendToGoogle(chunk)}
+                        disabled={isIndexing || quotaRemaining <= 0}
+                        className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors shadow-sm border bg-green-600 text-white hover:bg-green-700 border-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isIndexing ? `Sending... ${indexingProgress}/${Math.min(chunk.length, quotaRemaining)}` : quotaRemaining <= 0 ? 'Quota Exhausted' : 'Send to Google'}
+                      </button>
+                      <button
+                        onClick={() => handleSendToBing(chunk)}
+                        disabled={isBingIndexing}
+                        className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors shadow-sm border bg-teal-600 text-white hover:bg-teal-700 border-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isBingIndexing ? `Sending... ${bingProgress}/${chunk.length}` : 'Send to Bing'}
+                      </button>
+                    </>
                   )}
                   <button 
                     onClick={() => copyChunkLinks(chunk, chunkIndex)}
