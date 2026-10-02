@@ -21,16 +21,32 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return { title: 'Post Not Found' };
   }
 
+  const imageUrl = post.image.startsWith('http') ? post.image : `https://${post.image}`;
+
   return {
     title: post.title,
     description: post.description,
+    keywords: post.tags ? post.tags.split(',').map((t: string) => t.trim()) : [],
     alternates: {
-      canonical: `/${slug}`,
+      canonical: `https://modernjournal.info/${slug}`,
     },
     openGraph: {
       title: post.title,
       description: post.description,
-      images: [post.image.startsWith('http') ? post.image : `https://${post.image}`],
+      type: 'article',
+      publishedTime: post.date || new Date().toISOString(),
+      images: [{
+        url: imageUrl,
+        width: 1200,
+        height: 630,
+        alt: post.title,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+      images: [imageUrl],
     },
   };
 }

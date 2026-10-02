@@ -1,4 +1,13 @@
 import AutoRedirect from '@/components/AutoRedirect';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Modern Journal - Exclusive Trending Stories",
+  description: "Your premium source for the latest viral stories, in-depth analysis, and exclusive deep-dives into trending topics.",
+  alternates: {
+    canonical: 'https://modernjournal.info',
+  },
+};
 
 export default function Home() {
   return (
