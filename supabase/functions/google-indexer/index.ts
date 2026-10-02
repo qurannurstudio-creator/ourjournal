@@ -10,7 +10,7 @@ const corsHeaders = {
 async function getAccessToken(clientEmail: string, privateKey: string) {
   const alg = 'RS256';
   const privateKeyObj = await importPKCS8(privateKey, alg);
-  
+
   const jwt = await new SignJWT({
     iss: clientEmail,
     scope: 'https://www.googleapis.com/auth/indexing',
@@ -42,12 +42,39 @@ serve(async (req) => {
   }
 
   try {
-    const { urls, blogIds } = await req.json();
+    const { urls, blogIds, batchId } = await req.json();
 
     if (!urls || !Array.isArray(urls) || urls.length === 0) {
-      return new Response(JSON.stringify({ error: 'No URLs provided' }), { 
-        status: 400, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      return new Response(JSON.stringify({ error: 'No URLs provided' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Check Quota
+    const today = new Date().toISOString().split('T')[0];
+    const { data: logs, error: logError } = await supabase
+      .from('indexing_logs')
+      .select('urls_sent')
+      .eq('date', today);
+
+    if (logError) {
+      console.error('Error fetching logs:', logError);
+    }
+
+    let todaySent = 0;
+    if (logs && logs.length > 0) {
+      todaySent = logs.reduce((acc, log) => acc + (log.urls_sent || 0), 0);
+    }
+
+    if (todaySent + urls.length > 200) {
+      return new Response(JSON.stringify({ error: `Quota Exceeded. You have already sent ${todaySent}/200 URLs today. Limit is 200.` }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
@@ -60,11 +87,9 @@ serve(async (req) => {
     try {
       creds = JSON.parse(credsJson);
     } catch(e) {
-      // In case the key is stringified json
       creds = JSON.parse(credsJson.replace(/\\n/g, '\\n'));
     }
 
-    // Ensure proper newlines in PEM format
     const privateKey = creds.private_key.replace(/\\n/g, '\n');
     const token = await getAccessToken(creds.client_email, privateKey);
 
@@ -84,17 +109,21 @@ serve(async (req) => {
       return { url, status: res.status };
     }));
 
-    // Update Supabase
+    // Update Supabase Blogs
     if (blogIds && blogIds.length > 0) {
-      const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-      
-      const supabase = createClient(supabaseUrl, supabaseKey);
       await supabase
         .from('blogs')
         .update({ indexed_at: new Date().toISOString() })
         .in('id', blogIds);
     }
+
+    // Insert Log
+    await supabase.from('indexing_logs').insert({
+      urls_sent: urls.length,
+      status: 'SUCCESS',
+      batch_id: batchId || null,
+      date: today
+    });
 
     return new Response(JSON.stringify({ success: true, results }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

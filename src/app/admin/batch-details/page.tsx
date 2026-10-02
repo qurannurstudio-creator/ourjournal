@@ -58,6 +58,23 @@ function BatchDetailsContent() {
   };
 
   const [chunkCopyStatus, setChunkCopyStatus] = useState<Record<number, string>>({});
+  const [quotaRemaining, setQuotaRemaining] = useState<number>(200);
+
+  useEffect(() => {
+    fetchQuota();
+  }, []);
+
+  const fetchQuota = async () => {
+    const today = new Date().toISOString().split('T')[0];
+    const { data } = await supabase
+      .from('indexing_logs')
+      .select('urls_sent')
+      .eq('date', today);
+    if (data) {
+      const total = data.reduce((acc, log) => acc + (log.urls_sent || 0), 0);
+      setQuotaRemaining(200 - total);
+    }
+  };
 
   const chunks: any[][] = [];
   if (blogs.length > 0) {
@@ -72,7 +89,7 @@ function BatchDetailsContent() {
     navigator.clipboard.writeText(urls).then(() => {
       setChunkCopyStatus(prev => ({ ...prev, [index]: 'Copied!' }));
       setTimeout(() => {
-        setChunkCopyStatus(prev => ({ ...prev, [index]: 'Copy these 200 Links' }));
+        setChunkCopyStatus(prev => ({ ...prev, [index]: `Copy these ${chunk.length} Links` }));
       }, 2000);
       toast.success(`Copied ${chunk.length} links!`);
     });
@@ -81,10 +98,20 @@ function BatchDetailsContent() {
   const [isIndexing, setIsIndexing] = useState(false);
   const [indexingProgress, setIndexingProgress] = useState(0);
 
-  const handleSendToGoogle = async (chunk: any[]) => {
+  const handleSendToGoogle = async (originalChunk: any[]) => {
+    if (quotaRemaining <= 0) {
+      toast.error("Today's quota is exhausted. Please try again tomorrow.");
+      return;
+    }
+
     setIsIndexing(true);
     setIndexingProgress(0);
     
+    const chunk = originalChunk.slice(0, quotaRemaining);
+    if (chunk.length < originalChunk.length) {
+      toast.success(`Only sending first ${chunk.length} URLs due to quota limits.`);
+    }
+
     const subChunks = [];
     for (let i = 0; i < chunk.length; i += 100) {
       subChunks.push(chunk.slice(i, i + 100));
@@ -102,7 +129,7 @@ function BatchDetailsContent() {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ urls, blogIds })
+          body: JSON.stringify({ urls, blogIds, batchId })
         });
         
         if (!res.ok) {
@@ -115,6 +142,9 @@ function BatchDetailsContent() {
       }
       toast.success('Successfully sent to Google Indexer!');
       fetchBatchDetails();
+      fetchQuota();
+      // Reload page to update the TopBar quota as well
+      setTimeout(() => window.location.reload(), 2000);
     } catch (error: any) {
       toast.error(error.message || 'Error communicating with Edge Function');
     } finally {
@@ -247,10 +277,10 @@ function BatchDetailsContent() {
                   {isFirstChunk && (
                     <button
                       onClick={() => handleSendToGoogle(chunk)}
-                      disabled={isIndexing}
-                      className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors shadow-sm border bg-green-600 text-white hover:bg-green-700 border-green-600 disabled:opacity-50"
+                      disabled={isIndexing || quotaRemaining <= 0}
+                      className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors shadow-sm border bg-green-600 text-white hover:bg-green-700 border-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isIndexing ? `Sending... ${indexingProgress}/${chunk.length}` : 'Send to Google Indexer'}
+                      {isIndexing ? `Sending... ${indexingProgress}/${Math.min(chunk.length, quotaRemaining)}` : quotaRemaining <= 0 ? 'Quota Exhausted' : 'Send to Google Indexer'}
                     </button>
                   )}
                   <button 

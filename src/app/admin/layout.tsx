@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Toaster } from 'react-hot-toast';
 
+import { QuotaTracker } from '@/components/admin/QuotaTracker';
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -95,6 +97,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             Create Batch
           </Link>
+          <Link
+            href="/admin/indexing-history"
+            className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              pathname === '/admin/indexing-history' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            Indexing History
+          </Link>
         </nav>
       </aside>
 
@@ -105,10 +115,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center gap-4">
             <h2 className="text-sm font-medium text-slate-500">Dashboard</h2>
             <div className="h-4 w-px bg-slate-300"></div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-              <span className="text-xs font-medium text-slate-600">Google Indexing Active</span>
-            </div>
+            <QuotaTracker />
           </div>
           <button 
             onClick={handleLogout}
