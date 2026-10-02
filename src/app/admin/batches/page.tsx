@@ -28,10 +28,48 @@ function BatchRow({ batch, deleteBatch }: { batch: any; deleteBatch: (id: string
     }
   };
 
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editName, setEditName] = useState(batch.name);
+
+  const handleNameSave = async () => {
+    if (editName.trim() === '' || editName === batch.name) {
+      setIsEditingName(false);
+      setEditName(batch.name);
+      return;
+    }
+    const { error } = await supabase.from('batches').update({ name: editName }).eq('id', batch.id);
+    if (error) {
+      toast.error(`Error updating name: ${error.message}`);
+      setEditName(batch.name);
+    } else {
+      toast.success('Batch renamed successfully!');
+      batch.name = editName;
+    }
+    setIsEditingName(false);
+  };
+
   return (
     <tr className="hover:bg-slate-50 transition-colors">
-      <td className="px-6 py-4 font-medium text-slate-900">
-        {batch.name}
+      <td className="px-6 py-4 font-medium text-slate-900" onDoubleClick={() => setIsEditingName(true)}>
+        {isEditingName ? (
+          <input
+            autoFocus
+            type="text"
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            onBlur={handleNameSave}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleNameSave();
+              if (e.key === 'Escape') {
+                setIsEditingName(false);
+                setEditName(batch.name);
+              }
+            }}
+            className="w-full bg-white border border-slate-300 rounded px-2 py-1 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+        ) : (
+          <span className="cursor-text" title="Double click to rename">{batch.name}</span>
+        )}
       </td>
       <td className="px-6 py-4 text-slate-500">
         {new Date(batch.created_at).toLocaleString()}

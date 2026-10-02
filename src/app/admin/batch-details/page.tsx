@@ -15,8 +15,27 @@ function BatchDetailsContent() {
   const [loading, setLoading] = useState(true);
   const [copyStatus, setCopyStatus] = useState('Copy All Links');
   const [mainUrlCopied, setMainUrlCopied] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editName, setEditName] = useState('');
 
   const MAIN_DOMAIN = 'https://modernjournal.info';
+
+  const handleNameSave = async () => {
+    if (editName.trim() === '' || editName === batch.name) {
+      setIsEditingName(false);
+      setEditName(batch.name);
+      return;
+    }
+    const { error } = await supabase.from('batches').update({ name: editName }).eq('id', batch.id);
+    if (error) {
+      toast.error(`Error updating name: ${error.message}`);
+      setEditName(batch.name);
+    } else {
+      toast.success('Batch renamed successfully!');
+      setBatch({ ...batch, name: editName });
+    }
+    setIsEditingName(false);
+  };
 
   useEffect(() => {
     if (batchId) {
@@ -33,7 +52,7 @@ function BatchDetailsContent() {
     if (batchData) setBatch(batchData);
 
     // Fetch blogs for this batch
-    const { data: blogsData } = await supabase.from('blogs').select('id, title, slug').eq('batch_id', batchId);
+    const { data: blogsData } = await supabase.from('blogs').select('id, title, slug, indexed_at').eq('batch_id', batchId);
     if (blogsData) setBlogs(blogsData);
     
     setLoading(false);
@@ -84,12 +103,12 @@ function BatchDetailsContent() {
     }
   };
 
+  const pendingBlogs = blogs.filter(b => !b.indexed_at);
+  const indexedBlogs = blogs.filter(b => !!b.indexed_at);
+
   const chunks: any[][] = [];
-  if (blogs.length > 0) {
-    chunks.push(blogs.slice(0, 200));
-    if (blogs.length > 200) {
-      chunks.push(blogs.slice(200));
-    }
+  for (let i = 0; i < pendingBlogs.length; i += 200) {
+    chunks.push(pendingBlogs.slice(i, i + 200));
   }
 
   const copyChunkLinks = (chunk: any[], index: number) => {
@@ -234,7 +253,34 @@ function BatchDetailsContent() {
         </button>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900 mb-1">{batch.name}</h1>
+            {isEditingName ? (
+              <input
+                autoFocus
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                onBlur={handleNameSave}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleNameSave();
+                  if (e.key === 'Escape') {
+                    setIsEditingName(false);
+                    setEditName(batch.name);
+                  }
+                }}
+                className="text-3xl font-semibold tracking-tight text-slate-900 mb-1 w-full bg-white border border-slate-300 rounded px-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            ) : (
+              <h1 
+                className="text-3xl font-semibold tracking-tight text-slate-900 mb-1 cursor-text"
+                title="Double click to rename"
+                onDoubleClick={() => {
+                  setEditName(batch.name);
+                  setIsEditingName(true);
+                }}
+              >
+                {batch.name}
+              </h1>
+            )}
             <p className="text-slate-500 text-sm mb-2">Uploaded: {new Date(batch.created_at).toLocaleString()} &middot; {batch.post_count} URLs</p>
             <div className="flex items-center gap-2 text-sm">
               <span className="font-medium text-slate-700">Public URL: </span>
@@ -278,7 +324,7 @@ function BatchDetailsContent() {
                     Table {chunkIndex + 1} {isFirstChunk && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">Next for Indexing</span>}
                   </h3>
                   <p className={`text-xs mt-1 ${isFirstChunk ? 'text-blue-700' : 'text-slate-500'}`}>
-                    URLs {chunkIndex === 0 ? 1 : 201} to {chunkIndex === 0 ? chunk.length : blogs.length}
+                    URLs {chunkIndex * 200 + 1} to {chunkIndex * 200 + chunk.length}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -349,6 +395,59 @@ function BatchDetailsContent() {
             </div>
           );
         })
+      )}
+
+      {indexedBlogs.length > 0 && (
+        <div className="mt-12 mb-8 bg-white border border-green-200 rounded-xl overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b bg-green-50 border-green-200 flex justify-between items-center">
+            <div>
+              <h3 className="font-semibold text-green-900">
+                Indexed Links
+              </h3>
+              <p className="text-xs mt-1 text-green-700">
+                These {indexedBlogs.length} URLs have already been sent to Google.
+              </p>
+            </div>
+          </div>
+          
+          <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
+            <table className="w-full text-left text-sm text-slate-500">
+              <thead className="text-xs uppercase sticky top-0 backdrop-blur-sm text-green-800 bg-green-50/90">
+                <tr>
+                  <th className="px-6 py-3 font-medium w-12">#</th>
+                  <th className="px-6 py-3 font-medium w-1/3">Blog Title</th>
+                  <th className="px-6 py-3 font-medium">Generated URL</th>
+                  <th className="px-6 py-3 font-medium">Indexed At</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-green-100/50">
+                {indexedBlogs.map((blog, index) => (
+                  <tr key={blog.id} className="hover:bg-green-50/50 transition-colors">
+                    <td className="px-6 py-2.5 font-mono text-xs text-slate-400">
+                      {index + 1}
+                    </td>
+                    <td className="px-6 py-2.5 font-medium text-slate-900 truncate max-w-xs">
+                      {blog.title}
+                    </td>
+                    <td className="px-6 py-2.5 font-mono text-xs text-slate-600">
+                      <a 
+                        href={`${MAIN_DOMAIN}/${blog.slug}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-blue-600 hover:underline transition-colors"
+                      >
+                        {MAIN_DOMAIN}/{blog.slug}
+                      </a>
+                    </td>
+                    <td className="px-6 py-2.5 text-xs text-slate-500">
+                      {new Date(blog.indexed_at).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </div>
   );
