@@ -135,6 +135,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             Indexing History
           </Link>
+          <Link
+            href="/admin/settings"
+            className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              pathname === '/admin/settings' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            Settings
+          </Link>
         </nav>
       </aside>
 
