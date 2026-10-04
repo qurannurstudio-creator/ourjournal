@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { getBlogPosts } from '@/lib/sheets';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: "Modern Journal - Exclusive Trending Stories",
@@ -74,9 +75,9 @@ export default async function Home() {
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block py-1 px-3 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-semibold tracking-wider uppercase mb-6">
+          <Link href={navLinks[0]} className="inline-block py-1 px-3 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-semibold tracking-wider uppercase mb-6 hover:bg-red-500/20 hover:text-red-300 transition-colors">
             Breaking News & Exclusives
-          </span>
+          </Link>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
             Uncover The Truth With <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-700">
@@ -138,19 +139,7 @@ export default async function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 py-12 border-t border-slate-900 text-center">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-center gap-2 mb-6">
-             <div className="w-6 h-6 bg-red-600 rounded flex items-center justify-center">
-                <span className="font-bold text-white text-xs">M</span>
-              </div>
-             <span className="font-bold text-lg">Modern<span className="text-red-500">Journal</span></span>
-          </div>
-          <p className="text-slate-500 text-sm">
-            &copy; {new Date().getFullYear()} Modern Journal. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
