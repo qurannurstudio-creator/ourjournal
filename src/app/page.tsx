@@ -2,6 +2,7 @@ import AutoRedirect from '@/components/AutoRedirect';
 import { Metadata } from 'next';
 import { getBlogPosts } from '@/lib/sheets';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 export const metadata: Metadata = {
   title: "Modern Journal - Exclusive Trending Stories",
@@ -14,21 +15,31 @@ export const metadata: Metadata = {
 export default async function Home() {
   const allPosts = await getBlogPosts();
   
+  // Fetch batches for navbar
+  const { data: batchesData } = await supabase.from('batches').select('id, name');
+  const batches = batchesData || [];
+  
   // Shuffle posts deterministically for build or just take random
   const shuffled = [...allPosts].sort(() => 0.5 - Math.random());
   
-  // Pick 4 for navbar, 3 for cards
-  const navPosts = shuffled.slice(0, 4);
-  const cardPosts = shuffled.slice(4, 7);
+  // Pick 3 for cards
+  const cardPosts = shuffled.slice(0, 3);
 
   // Fallback if no posts exist yet
-  const safeNav = navPosts.length > 0 ? navPosts : Array(4).fill({ slug: '', title: 'Trending' });
   const safeCards = cardPosts.length > 0 ? cardPosts : Array(3).fill({ 
     slug: '', 
     title: 'New Story', 
     description: 'Coming soon...', 
     tags: 'Updates',
     image: 'https://picsum.photos/seed/placeholder/800/600'
+  });
+
+  // Assign batch URLs to navbar (circularly if there are less than 4 batches)
+  const navLinks = Array.from({ length: 4 }).map((_, i) => {
+    if (batches.length > 0) {
+      return `/collection/${batches[i % batches.length].id}`;
+    }
+    return '#';
   });
 
   return (
@@ -46,10 +57,10 @@ export default async function Home() {
               <span className="font-bold text-xl tracking-tight">Modern<span className="text-red-500">Journal</span></span>
             </div>
             <div className="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
-              <Link href={`/${safeNav[0]?.slug}`} className="text-red-500 hover:text-red-400 transition-colors">Trending</Link>
-              <Link href={`/${safeNav[1]?.slug}`} className="hover:text-white transition-colors">World</Link>
-              <Link href={`/${safeNav[2]?.slug}`} className="hover:text-white transition-colors">Technology</Link>
-              <Link href={`/${safeNav[3]?.slug}`} className="hover:text-white transition-colors">Lifestyle</Link>
+              <Link href={navLinks[0]} className="text-red-500 hover:text-red-400 transition-colors">Trending</Link>
+              <Link href={navLinks[1]} className="hover:text-white transition-colors">World</Link>
+              <Link href={navLinks[2]} className="hover:text-white transition-colors">Technology</Link>
+              <Link href={navLinks[3]} className="hover:text-white transition-colors">Lifestyle</Link>
             </div>
           </div>
         </div>
@@ -76,7 +87,7 @@ export default async function Home() {
             Your premium source for the latest viral stories, in-depth analysis, and exclusive deep-dives into topics that matter today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href={`/${safeNav[0]?.slug}`} className="px-8 py-4 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:shadow-lg hover:shadow-red-600/30 hover:scale-105 transition-all duration-300 inline-block">
+            <Link href={navLinks[0]} className="px-8 py-4 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:shadow-lg hover:shadow-red-600/30 hover:scale-105 transition-all duration-300 inline-block">
               Read Latest Stories
             </Link>
             <button className="px-8 py-4 rounded-full bg-slate-800 text-white font-semibold hover:bg-slate-700 transition-all duration-300 border border-slate-700 hover:border-slate-600">
