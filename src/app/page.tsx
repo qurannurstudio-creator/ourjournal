@@ -90,9 +90,9 @@ export default async function Home() {
             <Link href={navLinks[0]} className="px-8 py-4 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:shadow-lg hover:shadow-red-600/30 hover:scale-105 transition-all duration-300 inline-block">
               Read Latest Stories
             </Link>
-            <button className="px-8 py-4 rounded-full bg-slate-800 text-white font-semibold hover:bg-slate-700 transition-all duration-300 border border-slate-700 hover:border-slate-600">
+            <Link href={`/${safeCards[0]?.slug}`} className="px-8 py-4 rounded-full bg-slate-800 text-white font-semibold hover:bg-slate-700 transition-all duration-300 border border-slate-700 hover:border-slate-600 inline-block">
               Subscribe to Newsletter
-            </button>
+            </Link>
           </div>
         </div>
       </section>
