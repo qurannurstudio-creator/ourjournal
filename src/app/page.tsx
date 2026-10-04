@@ -1,5 +1,7 @@
 import AutoRedirect from '@/components/AutoRedirect';
 import { Metadata } from 'next';
+import { getBlogPosts } from '@/lib/sheets';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: "Modern Journal - Exclusive Trending Stories",
@@ -9,10 +11,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const allPosts = await getBlogPosts();
+  
+  // Shuffle posts deterministically for build or just take random
+  const shuffled = [...allPosts].sort(() => 0.5 - Math.random());
+  
+  // Pick 4 for navbar, 3 for cards
+  const navPosts = shuffled.slice(0, 4);
+  const cardPosts = shuffled.slice(4, 7);
+
+  // Fallback if no posts exist yet
+  const safeNav = navPosts.length > 0 ? navPosts : Array(4).fill({ slug: '', title: 'Trending' });
+  const safeCards = cardPosts.length > 0 ? cardPosts : Array(3).fill({ 
+    slug: '', 
+    title: 'New Story', 
+    description: 'Coming soon...', 
+    tags: 'Updates',
+    image: 'https://picsum.photos/seed/placeholder/800/600'
+  });
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-red-600 selection:text-white">
-      {/* Kept the auto-redirect exactly as requested */}
       <AutoRedirect />
 
       {/* Navigation */}
@@ -26,10 +46,10 @@ export default function Home() {
               <span className="font-bold text-xl tracking-tight">Modern<span className="text-red-500">Journal</span></span>
             </div>
             <div className="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
-              <a href="#" className="text-red-500 hover:text-red-400 transition-colors">Trending</a>
-              <a href="#" className="hover:text-white transition-colors">World</a>
-              <a href="#" className="hover:text-white transition-colors">Technology</a>
-              <a href="#" className="hover:text-white transition-colors">Lifestyle</a>
+              <Link href={`/${safeNav[0]?.slug}`} className="text-red-500 hover:text-red-400 transition-colors">Trending</Link>
+              <Link href={`/${safeNav[1]?.slug}`} className="hover:text-white transition-colors">World</Link>
+              <Link href={`/${safeNav[2]?.slug}`} className="hover:text-white transition-colors">Technology</Link>
+              <Link href={`/${safeNav[3]?.slug}`} className="hover:text-white transition-colors">Lifestyle</Link>
             </div>
           </div>
         </div>
@@ -56,9 +76,9 @@ export default function Home() {
             Your premium source for the latest viral stories, in-depth analysis, and exclusive deep-dives into topics that matter today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:shadow-lg hover:shadow-red-600/30 hover:scale-105 transition-all duration-300">
+            <Link href={`/${safeNav[0]?.slug}`} className="px-8 py-4 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:shadow-lg hover:shadow-red-600/30 hover:scale-105 transition-all duration-300 inline-block">
               Read Latest Stories
-            </button>
+            </Link>
             <button className="px-8 py-4 rounded-full bg-slate-800 text-white font-semibold hover:bg-slate-700 transition-all duration-300 border border-slate-700 hover:border-slate-600">
               Subscribe to Newsletter
             </button>
@@ -75,56 +95,33 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Card 1 */}
-            <div className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-red-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20">
-              <div className="h-48 bg-slate-800 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-900/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="absolute bottom-4 left-4">
-                  <span className="px-2 py-1 bg-red-600 text-xs font-bold rounded uppercase tracking-wider text-white">Exclusive</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-3 group-hover:text-red-400 transition-colors">The Digital Revolution in Modern Media</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">How new algorithms are shaping the way we consume viral content across the globe.</p>
-                <span className="text-red-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform">
-                  Read Article &rarr;
-                </span>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-red-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20">
-              <div className="h-48 bg-slate-800 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-700/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="absolute bottom-4 left-4">
-                  <span className="px-2 py-1 bg-slate-700 text-xs font-bold rounded uppercase tracking-wider text-white">Technology</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-3 group-hover:text-red-400 transition-colors">Future of Artificial Intelligence</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">A deep dive into how AI generated content is bypassing traditional security measures.</p>
-                <span className="text-red-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform">
-                  Read Article &rarr;
-                </span>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-red-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20 md:hidden lg:block">
-              <div className="h-48 bg-slate-800 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-950/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="absolute bottom-4 left-4">
-                  <span className="px-2 py-1 bg-red-900 text-xs font-bold rounded uppercase tracking-wider text-white">Lifestyle</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-3 group-hover:text-red-400 transition-colors">Psychology of Viral Trends</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">Why certain topics capture the world's attention instantly and refuse to let go.</p>
-                <span className="text-red-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform">
-                  Read Article &rarr;
-                </span>
-              </div>
-            </div>
+            {safeCards.map((post, index) => {
+              // Ensure image is a valid URL
+              const imageUrl = post.image?.startsWith('http') ? post.image : (post.image ? `https://${post.image}` : 'https://picsum.photos/seed/placeholder/800/600');
+              
+              return (
+                <Link href={`/${post.slug}`} key={index} className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-red-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20 block">
+                  <div className="h-48 bg-slate-800 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-900/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={imageUrl} alt={post.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
+                    </div>
+                    <div className="absolute bottom-4 left-4">
+                      <span className="px-2 py-1 bg-red-600 text-xs font-bold rounded uppercase tracking-wider text-white">
+                        {post.tags ? post.tags.split(',')[0].trim() : 'Exclusive'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-3 group-hover:text-red-400 transition-colors line-clamp-2">{post.title}</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">{post.description}</p>
+                    <span className="text-red-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform">
+                      Read Article &rarr;
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
