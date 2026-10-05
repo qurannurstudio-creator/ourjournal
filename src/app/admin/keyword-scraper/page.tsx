@@ -6,7 +6,8 @@ import { toast } from 'react-hot-toast';
 
 export default function KeywordScraperAdmin() {
   const [urlPrefix, setUrlPrefix] = useState<string>('https://completion.amazon.com/api/2017/suggestions?mid=ATVPDKIKX0DER&alias=aps&prefix=');
-  const [seedKeywords, setSeedKeywords] = useState<string>('best phone\nbudget smartphone');
+  const [seedKeywords, setSeedKeywords] = useState<string[]>(['best phone', 'budget smartphone']);
+  const [keywordInput, setKeywordInput] = useState<string>('');
   const [targetCount, setTargetCount] = useState<number>(50);
   
   const [loading, setLoading] = useState(false);
@@ -48,9 +49,8 @@ export default function KeywordScraperAdmin() {
   }
 
   async function handleGenerate() {
-    const seeds = seedKeywords.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-    if (seeds.length === 0) {
-      toast.error('Please provide at least one seed keyword.');
+    if (seedKeywords.length === 0) {
+      toast.error('Please add at least one seed keyword.');
       return;
     }
     if (!urlPrefix) {
@@ -64,13 +64,21 @@ export default function KeywordScraperAdmin() {
     // Auto save the URL when generating
     handleSaveUrl();
 
+    // Include whatever is currently typed in the input box but not yet added
+    const finalSeeds = [...seedKeywords];
+    if (keywordInput.trim() !== '') {
+      finalSeeds.push(keywordInput.trim());
+      setSeedKeywords(finalSeeds);
+      setKeywordInput('');
+    }
+
     try {
       const res = await fetch('/api/scraper', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           urlPrefix: urlPrefix,
-          seedKeywords: seeds,
+          seedKeywords: finalSeeds,
           targetCount: targetCount
         })
       });
@@ -134,14 +142,42 @@ export default function KeywordScraperAdmin() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-900 mb-2">Seed Keywords (One per line)</label>
-                <textarea
-                  value={seedKeywords}
-                  onChange={(e) => setSeedKeywords(e.target.value)}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-slate-900 focus:outline-none transition-all text-sm"
-                  placeholder="best phone&#10;budget smartphone"
-                />
+                <label className="block text-sm font-medium text-slate-900 mb-2">Seed Keywords</label>
+                <div className="w-full px-3 py-2 border border-slate-200 rounded-md bg-white focus-within:ring-2 focus-within:ring-slate-900 focus-within:border-slate-900 transition-all min-h-[42px] flex flex-wrap gap-2">
+                  {seedKeywords.map((kw, idx) => (
+                    <div key={idx} className="flex items-center gap-1 bg-slate-100 text-slate-700 px-2 py-1 rounded-md text-sm">
+                      <span>{kw}</span>
+                      <button 
+                        type="button" 
+                        onClick={() => setSeedKeywords(seedKeywords.filter((_, i) => i !== idx))}
+                        className="text-slate-400 hover:text-red-500 font-bold ml-1"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                  <input
+                    type="text"
+                    value={keywordInput}
+                    onChange={(e) => setKeywordInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ',') {
+                        e.preventDefault();
+                        const val = keywordInput.trim();
+                        if (val && !seedKeywords.includes(val)) {
+                          setSeedKeywords([...seedKeywords, val]);
+                        }
+                        setKeywordInput('');
+                      } else if (e.key === 'Backspace' && keywordInput === '' && seedKeywords.length > 0) {
+                        e.preventDefault();
+                        setSeedKeywords(seedKeywords.slice(0, -1));
+                      }
+                    }}
+                    placeholder={seedKeywords.length === 0 ? "Type and press Enter..." : ""}
+                    className="flex-1 min-w-[120px] outline-none text-sm bg-transparent"
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Type a keyword and press Enter or Comma (,) to add it.</p>
               </div>
               
               <div>

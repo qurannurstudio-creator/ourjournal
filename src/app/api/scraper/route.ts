@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const keywordsToProcess = [...seedKeywords];
 
     let requestsMade = 0;
-    const MAX_REQUESTS = 50; // hard limit to prevent infinite loops and timeouts
+    const MAX_REQUESTS = 15; // Limit to avoid Edge function timeout
 
     while (keywordsToProcess.length > 0 && allKeywords.size < count && requestsMade < MAX_REQUESTS) {
       const currentKw = keywordsToProcess.shift();
@@ -73,9 +73,9 @@ export async function POST(request: Request) {
 
       requestsMade++;
       
-      // Delay to avoid rate limiting
+      // Small delay to avoid rate limiting but keep within Cloudflare timeout
       if (keywordsToProcess.length > 0 && allKeywords.size < count) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
     }
 
