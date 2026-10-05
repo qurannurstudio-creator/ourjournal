@@ -103,12 +103,11 @@ export default function KeywordScraperAdmin() {
         const currentKw = keywordsToProcess.shift();
         if (!currentKw) continue;
 
-        // Use a CORS proxy so we can fetch directly from the browser!
+        // Fetch directly from the source (Requires CORS extension in browser)
         const fetchUrl = urlPrefix + encodeURIComponent(currentKw);
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(fetchUrl)}`;
         
         try {
-          const response = await fetch(proxyUrl);
+          const response = await fetch(fetchUrl);
           if (response.ok) {
             const data = await response.json();
             const newSuggestions = extractSuggestions(data);
