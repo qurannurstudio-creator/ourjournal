@@ -20,8 +20,7 @@ export default function KeywordScraperAdmin() {
   }, []);
 
   async function fetchSavedSource() {
-    // Just fetch the first saved URL to prepopulate
-    const { data, error } = await supabase.from('scraper_sources').select('*').limit(1).single();
+    const { data } = await supabase.from('scraper_sources').select('*').limit(1).single();
     if (data) {
       setUrlPrefix(data.url_template);
       setSourceId(data.id);
@@ -33,11 +32,9 @@ export default function KeywordScraperAdmin() {
     setSaving(true);
     try {
       if (sourceId) {
-        // Update existing
         await supabase.from('scraper_sources').update({ url_template: urlPrefix }).eq('id', sourceId);
       } else {
-        // Insert new
-        const { data } = await supabase.from('scraper_sources').insert([{ name: 'Default API', url_template: urlPrefix }]).select().single();
+        const { data } = await supabase.from('scraper_sources').insert([{ name: 'Saved API', url_template: urlPrefix }]).select().single();
         if (data) setSourceId(data.id);
       }
       toast.success('API URL Saved!');
@@ -46,6 +43,33 @@ export default function KeywordScraperAdmin() {
     } finally {
       setSaving(false);
     }
+  }
+
+  async function handleDeleteUrl() {
+    if (!sourceId) return;
+    if (!confirm('Are you sure you want to delete this saved URL?')) return;
+    try {
+      await supabase.from('scraper_sources').delete().eq('id', sourceId);
+      setSourceId(null);
+      setUrlPrefix('');
+      toast.success('API URL Deleted!');
+    } catch (err) {
+      toast.error('Failed to delete URL');
+    }
+  }
+
+  // Generic JSON extractor logic directly in the client
+  function extractSuggestions(data: any): string[] {
+    if (data && data.suggestions && Array.isArray(data.suggestions)) {
+      return data.suggestions.map((item: any) => item.value).filter((v: any) => typeof v === 'string');
+    }
+    if (Array.isArray(data)) {
+      if (data.length > 1 && Array.isArray(data[1])) {
+        return data[1].filter((v: any) => typeof v === 'string' || (Array.isArray(v) && typeof v[0] === 'string')).map((v:any) => typeof v === 'string' ? v : v[0]);
+      }
+      return data.filter((v: any) => typeof v === 'string');
+    }
+    return [];
   }
 
   async function handleGenerate() {
@@ -60,11 +84,7 @@ export default function KeywordScraperAdmin() {
 
     setLoading(true);
     setResults([]);
-    
-    // Auto save the URL when generating
-    handleSaveUrl();
 
-    // Include whatever is currently typed in the input box but not yet added
     const finalSeeds = [...seedKeywords];
     if (keywordInput.trim() !== '') {
       finalSeeds.push(keywordInput.trim());
@@ -72,24 +92,48 @@ export default function KeywordScraperAdmin() {
       setKeywordInput('');
     }
 
-    try {
-      const res = await fetch('/api/scraper', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          urlPrefix: urlPrefix,
-          seedKeywords: finalSeeds,
-          targetCount: targetCount
-        })
-      });
+    const count = targetCount || 50;
+    const allKeywords = new Set<string>(finalSeeds);
+    const keywordsToProcess = [...finalSeeds];
+    let requestsMade = 0;
+    const MAX_REQUESTS = 15; 
 
-      const data = await res.json();
-      if (res.ok) {
-        setResults(data.keywords || []);
-        toast.success(`Generated ${data.keywords?.length || 0} keywords!`);
-      } else {
-        toast.error(data.error || 'Failed to generate keywords');
+    try {
+      while (keywordsToProcess.length > 0 && allKeywords.size < count && requestsMade < MAX_REQUESTS) {
+        const currentKw = keywordsToProcess.shift();
+        if (!currentKw) continue;
+
+        // Use a CORS proxy so we can fetch directly from the browser!
+        const fetchUrl = urlPrefix + encodeURIComponent(currentKw);
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(fetchUrl)}`;
+        
+        try {
+          const response = await fetch(proxyUrl);
+          if (response.ok) {
+            const data = await response.json();
+            const newSuggestions = extractSuggestions(data);
+
+            for (const word of newSuggestions) {
+              if (!allKeywords.has(word)) {
+                allKeywords.add(word);
+                keywordsToProcess.push(word);
+                if (allKeywords.size >= count) break;
+              }
+            }
+          }
+        } catch (err) {
+          console.error(`Error fetching data for ${currentKw}:`, err);
+        }
+
+        requestsMade++;
+        if (keywordsToProcess.length > 0 && allKeywords.size < count) {
+          // Prevent browser freezing with a slight delay
+          await new Promise(resolve => setTimeout(resolve, 300));
+        }
       }
+
+      setResults(Array.from(allKeywords));
+      toast.success(`Generated ${allKeywords.size} keywords!`);
     } catch (err: any) {
       toast.error(err.message || 'An error occurred');
     } finally {
@@ -118,12 +162,11 @@ export default function KeywordScraperAdmin() {
     <div className="max-w-5xl">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Keyword Scraper</h1>
-        <p className="text-slate-500">Generate bulk keywords automatically bypassing CORS. Just provide an autocomplete API URL.</p>
+        <p className="text-slate-500">Generate bulk keywords automatically from anywhere.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1 space-y-6">
-          
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
              <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50">
               <h2 className="text-lg font-semibold text-slate-900">Configuration</h2>
@@ -131,14 +174,31 @@ export default function KeywordScraperAdmin() {
             <div className="p-6 space-y-5">
               <div>
                 <label className="block text-sm font-medium text-slate-900 mb-1">API URL Prefix</label>
-                <p className="text-xs text-slate-500 mb-2">The keyword will be attached at the very end of this URL.</p>
                 <input
                   type="url"
                   value={urlPrefix}
                   onChange={(e) => setUrlPrefix(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-slate-900 focus:outline-none transition-all text-sm"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-slate-900 focus:outline-none transition-all text-sm mb-3"
                   placeholder="https://completion.amazon.com/api/2017/suggestions?...&prefix="
                 />
+                <div className="flex gap-2">
+                  <button 
+                    onClick={handleSaveUrl}
+                    disabled={saving}
+                    className="flex-1 bg-slate-100 text-slate-900 border border-slate-200 py-1.5 rounded text-sm font-medium hover:bg-slate-200 transition-colors"
+                  >
+                    {saving ? 'Saving...' : 'Save URL'}
+                  </button>
+                  {sourceId && (
+                    <button 
+                      onClick={handleDeleteUrl}
+                      className="px-3 bg-red-50 text-red-600 border border-red-100 rounded hover:bg-red-100 transition-colors flex items-center justify-center"
+                      title="Delete Saved URL"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div>
@@ -187,7 +247,7 @@ export default function KeywordScraperAdmin() {
                   value={targetCount}
                   onChange={(e) => setTargetCount(parseInt(e.target.value))}
                   className="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-slate-900 focus:outline-none transition-all text-sm"
-                  min="10"
+                  min="1"
                   max="1000"
                 />
               </div>
