@@ -23,9 +23,9 @@ function extractSuggestions(data: any): string[] {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { urlTemplate, seedKeywords, targetCount } = body;
+    const { urlPrefix, seedKeywords, targetCount } = body;
 
-    if (!urlTemplate || !seedKeywords || !Array.isArray(seedKeywords) || seedKeywords.length === 0) {
+    if (!urlPrefix || !seedKeywords || !Array.isArray(seedKeywords) || seedKeywords.length === 0) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       const currentKw = keywordsToProcess.shift();
       if (!currentKw) continue;
 
-      const fetchUrl = urlTemplate.replace('{keyword}', encodeURIComponent(currentKw));
+      const fetchUrl = urlPrefix + encodeURIComponent(currentKw);
       
       try {
         const response = await fetch(fetchUrl, {
