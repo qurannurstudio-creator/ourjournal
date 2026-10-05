@@ -119,9 +119,15 @@ export default function KeywordScraperAdmin() {
                 if (allKeywords.size >= count) break;
               }
             }
+          } else {
+             if (requestsMade === 0) toast.error("Error: API returned " + response.status);
           }
         } catch (err) {
           console.error(`Error fetching data for ${currentKw}:`, err);
+          if (requestsMade === 0) {
+            toast.error("CORS Error: Please make sure your 'Allow CORS' extension is ON!");
+            break;
+          }
         }
 
         requestsMade++;
