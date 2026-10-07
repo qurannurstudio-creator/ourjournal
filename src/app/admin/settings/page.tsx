@@ -48,23 +48,26 @@ export default function SettingsPage() {
     try {
       setSaving(true);
       
-      const { error } = await supabase
+      const { data, error, status } = await supabase
         .from('settings')
         .update({
           redirect_url: redirectUrl,
           redirect_enabled: redirectEnabled,
         })
-        .eq('id', 1);
+        .eq('id', 1)
+        .select();
 
       if (error) {
-        toast.error('Failed to save settings');
+        toast.error(`Error: ${error.message}`);
         console.error(error);
+      } else if (!data || data.length === 0) {
+        toast.error('Settings not saved! (Blocked by RLS or row not found)');
       } else {
         toast.success('Settings saved successfully!');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('An error occurred while saving');
+      toast.error(`Exception: ${error.message || 'Unknown error'}`);
     } finally {
       setSaving(false);
     }
