@@ -4,6 +4,7 @@ import { getBlogPosts } from '@/lib/sheets';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 export const metadata: Metadata = {
   title: "Modern Journal - Exclusive Trending Stories",
@@ -46,26 +47,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-red-600 selection:text-white">
       <AutoRedirect />
-
-      {/* Navigation */}
-      <nav className="fixed w-full z-50 top-0 border-b border-red-900/30 bg-slate-950/80 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex-shrink-0 flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded-lg shadow-lg shadow-red-500/20 flex items-center justify-center">
-                <span className="font-bold text-white tracking-tighter">M</span>
-              </div>
-              <span className="font-bold text-xl tracking-tight">Modern<span className="text-red-500">Journal</span></span>
-            </div>
-            <div className="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
-              <Link href={navLinks[0]} className="text-red-500 hover:text-red-400 transition-colors">Trending</Link>
-              <Link href={navLinks[1]} className="hover:text-white transition-colors">World</Link>
-              <Link href={navLinks[2]} className="hover:text-white transition-colors">Technology</Link>
-              <Link href={navLinks[3]} className="hover:text-white transition-colors">Lifestyle</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">

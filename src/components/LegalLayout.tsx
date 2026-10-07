@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Footer from './Footer';
+import Navbar from './Navbar';
 
 export default function LegalLayout({ children, title }: { children: React.ReactNode, title: string }) {
   return (
@@ -10,17 +11,7 @@ export default function LegalLayout({ children, title }: { children: React.React
         <div className="absolute top-40 -left-40 w-96 h-96 bg-red-900/10 rounded-full blur-3xl opacity-50 mix-blend-screen"></div>
       </div>
       
-      {/* Simple Header */}
-      <header className="w-full border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="font-bold text-xl tracking-tight">Modern<span className="text-red-500">Journal</span></span>
-          </Link>
-          <Link href="/" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
-            &larr; Back to Home
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="flex-grow w-full relative z-10 py-12 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
