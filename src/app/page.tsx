@@ -116,7 +116,7 @@ export default async function Home() {
                   <div className="h-48 bg-slate-800 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-red-900/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={imageUrl} alt={post.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
+                      <img src={imageUrl} alt={post.title} loading="lazy" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
                     </div>
                     <div className="absolute bottom-4 left-4">
                       <span className="px-2 py-1 bg-red-600 text-xs font-bold rounded uppercase tracking-wider text-white">
