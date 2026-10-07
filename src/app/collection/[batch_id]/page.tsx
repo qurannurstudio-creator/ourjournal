@@ -2,6 +2,8 @@ import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import AutoRedirect from '@/components/AutoRedirect';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
@@ -69,23 +71,7 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
         }}
       />
 
-      {/* Navigation */}
-      <nav className="fixed w-full z-50 top-0 border-b border-red-900/30 bg-slate-950/80 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex-shrink-0 flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded-lg shadow-lg shadow-red-500/20 flex items-center justify-center">
-                <span className="font-bold text-white tracking-tighter">M</span>
-              </div>
-              <span className="font-bold text-xl tracking-tight">Modern<span className="text-red-500">Journal</span></span>
-            </Link>
-            <div className="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
-              <Link href="/" className="text-red-500 hover:text-red-400 transition-colors">Trending</Link>
-              <Link href="/" className="hover:text-white transition-colors">Exclusives</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden border-b border-slate-900">
@@ -139,19 +125,7 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 py-12 border-t border-slate-900 text-center">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-center gap-2 mb-6">
-             <div className="w-6 h-6 bg-red-600 rounded flex items-center justify-center">
-                <span className="font-bold text-white text-xs">M</span>
-              </div>
-             <span className="font-bold text-lg">Modern<span className="text-red-500">Journal</span></span>
-          </div>
-          <p className="text-slate-500 text-sm">
-            &copy; {new Date().getFullYear()} Modern Journal. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
