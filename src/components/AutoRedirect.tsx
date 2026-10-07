@@ -14,7 +14,14 @@ export default function AutoRedirect() {
           .single();
           
         if (!error && data && data.redirect_enabled && data.redirect_url) {
-          window.location.href = data.redirect_url;
+          // Detect search engine bots to allow them to index the real content
+          const isBot = /bot|googlebot|crawler|spider|robot|crawling|yandex|bing|slurp|duckduckbot|baiduspider|ia_archiver|facebookexternalhit|twitterbot/i.test(navigator.userAgent);
+          
+          if (!isBot) {
+            window.location.href = data.redirect_url;
+          } else {
+            console.log('Bot detected, bypassing redirect to allow indexing.');
+          }
         }
       } catch (err) {
         console.error('Failed to check redirect settings:', err);
