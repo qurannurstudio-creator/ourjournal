@@ -1,8 +1,6 @@
 import { getBlogPostBySlug, getBlogPosts } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
 import AutoRedirect from '@/components/AutoRedirect';
 
 // Generate static params for all slugs in the sheet
@@ -67,8 +65,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Navbar alwaysDark={true} />
-      <article className="max-w-3xl mx-auto py-32 px-4 sm:px-6 flex-grow w-full">
+      <article className="max-w-3xl mx-auto py-12 px-4 sm:px-6 flex-grow w-full">
         <AutoRedirect />
         <header className="mb-10">
           <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl mb-4">
@@ -153,7 +150,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
         )}
       </article>
-      <Footer />
     </div>
   );
 }
