@@ -1,56 +1,65 @@
 import { Metadata } from 'next';
-import Footer from '@/components/Footer';
+import LegalLayout from '@/components/LegalLayout';
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy Policy for Modern Journal. Learn how we collect, use, and protect your data.",
+  description: "Privacy policy and data protection guidelines for Modern Journal.",
 };
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-red-600 selection:text-white flex flex-col">
-      <main className="flex-grow max-w-4xl mx-auto px-4 py-20 w-full">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-700">
-          Privacy Policy
-        </h1>
-        <div className="prose prose-invert prose-lg max-w-none text-slate-300">
-          <p>Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-          
-          <h2>1. Introduction</h2>
-          <p>
-            Welcome to Modern Journal ("we", "our", "us"). We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you visit our website (the "Site").
-          </p>
+    <LegalLayout title="Privacy Policy">
+      <p>Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
 
-          <h2>2. Information We Collect</h2>
-          <p>We may collect information about you in a variety of ways. The information we may collect on the Site includes:</p>
-          <ul>
-            <li><strong>Personal Data:</strong> Personally identifiable information, such as your name, shipping address, email address, and telephone number that you voluntarily give to us when you subscribe to our newsletter or leave comments.</li>
-            <li><strong>Derivative Data:</strong> Information our servers automatically collect when you access the Site, such as your IP address, your browser type, your operating system, your access times, and the pages you have viewed directly before and after accessing the Site.</li>
-          </ul>
+      <h2>1. Introduction</h2>
+      <p>
+        Welcome to Modern Journal. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you.
+      </p>
 
-          <h2>3. Cookies and Tracking Technologies</h2>
-          <p>
-            We use cookies, web beacons, tracking pixels, and other tracking technologies on the Site to help customize the Site and improve your experience. We also use third-party services, such as Google Analytics and Google AdSense, which may use cookies to serve ads based on your prior visits to our website or other websites.
-          </p>
-          <p>
-            Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our site and/or other sites on the Internet. Users may opt-out of personalized advertising by visiting Google Ads Settings.
-          </p>
+      <h2>2. The Data We Collect About You</h2>
+      <p>
+        Personal data, or personal information, means any information about an individual from which that person can be identified. We may collect, use, store and transfer different kinds of personal data about you which we have grouped together as follows:
+      </p>
+      <ul>
+        <li><strong>Identity Data</strong> includes first name, last name, username or similar identifier.</li>
+        <li><strong>Contact Data</strong> includes email address and telephone numbers.</li>
+        <li><strong>Technical Data</strong> includes internet protocol (IP) address, your login data, browser type and version, time zone setting and location, browser plug-in types and versions, operating system and platform, and other technology on the devices you use to access this website.</li>
+        <li><strong>Usage Data</strong> includes information about how you use our website, products and services.</li>
+      </ul>
 
-          <h2>4. Use of Your Information</h2>
-          <p>Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Site to:</p>
-          <ul>
-            <li>Deliver targeted advertising, coupons, newsletters, and other information regarding promotions and the Site to you.</li>
-            <li>Monitor and analyze usage and trends to improve your experience with the Site.</li>
-            <li>Respond to product and customer service requests.</li>
-          </ul>
+      <h2>3. How We Use Your Personal Data</h2>
+      <p>
+        We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:
+      </p>
+      <ul>
+        <li>Where we need to perform the contract we are about to enter into or have entered into with you.</li>
+        <li>Where it is necessary for our legitimate interests (or those of a third party) and your interests and fundamental rights do not override those interests.</li>
+        <li>Where we need to comply with a legal obligation.</li>
+      </ul>
 
-          <h2>5. Contact Us</h2>
-          <p>
-            If you have questions or comments about this Privacy Policy, please contact us at: <a href="mailto:contact@modernjournal.info" className="text-red-400 hover:text-red-300">contact@modernjournal.info</a>
-          </p>
-        </div>
-      </main>
-      <Footer />
-    </div>
+      <h2>4. Data Security</h2>
+      <p>
+        We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorized way, altered or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors and other third parties who have a business need to know.
+      </p>
+
+      <h2>5. Your Legal Rights</h2>
+      <p>
+        Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to:
+      </p>
+      <ul>
+        <li>Request access to your personal data.</li>
+        <li>Request correction of your personal data.</li>
+        <li>Request erasure of your personal data.</li>
+        <li>Object to processing of your personal data.</li>
+        <li>Request restriction of processing your personal data.</li>
+        <li>Request transfer of your personal data.</li>
+        <li>Right to withdraw consent.</li>
+      </ul>
+
+      <h2>6. Contact Us</h2>
+      <p>
+        If you have any questions about this privacy policy or our privacy practices, please contact us via email at <a href="mailto:privacy@modernjournal.info" className="text-red-400 hover:text-red-300">privacy@modernjournal.info</a>.
+      </p>
+    </LegalLayout>
   );
 }
