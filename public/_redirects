@@ -1,1 +1,4 @@
 / /news 301
+/news /index.html 200
+/news/ /index.html 200
+/news/* /:splat 200
