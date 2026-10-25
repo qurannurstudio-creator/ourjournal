@@ -55,7 +55,7 @@ export default function Navbar({ alwaysDark = false }: { alwaysDark?: boolean })
   return (
     <>
       <nav 
-        className={`fixed w-full z-50 top-0 transition-transform duration-300 ease-in-out border-b border-red-900/30 bg-slate-950/80 backdrop-blur-md ${
+        className={`fixed w-full z-50 top-0 transition-transform duration-300 ease-in-out border-b border-emerald-900/30 bg-slate-950/80 backdrop-blur-md ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
@@ -63,13 +63,13 @@ export default function Navbar({ alwaysDark = false }: { alwaysDark?: boolean })
           <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0 flex items-center gap-2">
               <Link href="/" className="font-bold text-xl tracking-tight text-white hover:text-slate-200 transition-colors">
-                Modern<span className="text-red-500">Journal</span>
+                Algeria<span className="text-emerald-500">Times</span>
               </Link>
             </div>
             
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
-              <Link href={navLinks[0]} className="text-red-500 hover:text-red-400 transition-colors">Trending</Link>
+              <Link href={navLinks[0]} className="text-emerald-500 hover:text-emerald-400 transition-colors">Trending</Link>
               <Link href={navLinks[1]} className="hover:text-white transition-colors">World</Link>
               <Link href={navLinks[2]} className="hover:text-white transition-colors">Technology</Link>
               <Link href={navLinks[3]} className="hover:text-white transition-colors">Lifestyle</Link>
@@ -108,7 +108,7 @@ export default function Navbar({ alwaysDark = false }: { alwaysDark?: boolean })
             <span className="font-bold text-lg text-white">Menu</span>
             <button 
               onClick={() => setIsMenuOpen(false)}
-              className="text-slate-400 hover:text-red-500 transition-colors p-1"
+              className="text-slate-400 hover:text-emerald-500 transition-colors p-1"
               aria-label="Close menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -118,13 +118,13 @@ export default function Navbar({ alwaysDark = false }: { alwaysDark?: boolean })
           </div>
           
           <div className="flex flex-col space-y-4 flex-grow overflow-y-auto">
-            <h3 className="text-xs font-semibold text-red-500 uppercase tracking-wider mb-2">Categories</h3>
+            <h3 className="text-xs font-semibold text-emerald-500 uppercase tracking-wider mb-2">Categories</h3>
             <Link href={navLinks[0]} onClick={() => setIsMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">Trending</Link>
             <Link href={navLinks[1]} onClick={() => setIsMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">World</Link>
             <Link href={navLinks[2]} onClick={() => setIsMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">Technology</Link>
             <Link href={navLinks[3]} onClick={() => setIsMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">Lifestyle</Link>
             
-            <h3 className="text-xs font-semibold text-red-500 uppercase tracking-wider mt-6 mb-2">Information</h3>
+            <h3 className="text-xs font-semibold text-emerald-500 uppercase tracking-wider mt-6 mb-2">Information</h3>
             <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">About Us</Link>
             <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">Contact</Link>
             <Link href="/privacy" onClick={() => setIsMenuOpen(false)} className="text-slate-300 hover:text-white transition-colors">Privacy Policy</Link>

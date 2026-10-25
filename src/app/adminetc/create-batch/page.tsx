@@ -109,7 +109,7 @@ export default function CreateBatchPage() {
           await triggerBuild();
 
           setTimeout(() => {
-            router.push(`/admin/batch-details?id=${batchId}`);
+            router.push(`/adminetc/batch-details?id=${batchId}`);
           }, 1500);
 
         } catch (error: any) {

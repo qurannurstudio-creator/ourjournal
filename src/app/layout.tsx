@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SITE_URL } from "@/lib/config";
+import { SITE_URL, SITE_NAME } from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Modern Journal - Exclusive Trending Stories",
-    template: "%s | Modern Journal"
+    default: `${SITE_NAME} - Latest Breaking News & Trending Stories`,
+    template: `%s | ${SITE_NAME}`
   },
-  description: "Your premium source for the latest viral stories, in-depth analysis, and exclusive deep-dives into trending topics.",
-  keywords: ["Viral Stories", "Trending News", "Exclusive Leaks", "Deep Dives", "Psychology", "Modern Journal"],
+  description: "Your trusted source for the latest news, insightful analysis, exclusive stories, and in-depth reports.",
+  keywords: ["Algeria Times", "Breaking News", "Trending Stories", "Global Analysis", "Deep Dives", "Daily News"],
   robots: {
     index: true,
     follow: true,
@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: SITE_URL,
-    siteName: 'Modern Journal',
-    title: 'Modern Journal - Exclusive Trending Stories',
-    description: 'Your premium source for the latest viral stories and exclusive deep-dives.',
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} - Latest Breaking News & Trending Stories`,
+    description: "Your trusted source for the latest news, insightful analysis, and exclusive deep-dives.",
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Modern Journal - Exclusive Trending Stories',
-    description: 'Your premium source for the latest viral stories and exclusive deep-dives.',
+    title: `${SITE_NAME} - Latest Breaking News & Trending Stories`,
+    description: "Your trusted source for the latest news, insightful analysis, and exclusive deep-dives.",
   },
 };
 

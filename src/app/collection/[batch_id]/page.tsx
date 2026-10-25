@@ -43,7 +43,7 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
   const posts = blogs || [];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-red-600 selection:text-white">
+    <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-emerald-600 selection:text-white">
       {/* Auto redirect component kept exactly as requested */}
       <AutoRedirect />
 
@@ -77,15 +77,15 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
       {/* Hero Section */}
       <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden border-b border-slate-900">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-red-600/10 rounded-full blur-3xl opacity-50 mix-blend-screen"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl opacity-50 mix-blend-screen"></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block py-1 px-3 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-semibold tracking-wider uppercase mb-6">
+          <span className="inline-block py-1 px-3 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold tracking-wider uppercase mb-6">
             Curated Selection
           </span>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-            Exclusive <span className="text-red-500">Trending</span> Stories
+            Exclusive <span className="text-emerald-500">Trending</span> Stories
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-slate-400">
             Explore our latest collection of {posts.length} viral articles, in-depth psychological analyses, and exclusive insights.
@@ -101,21 +101,21 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
               <Link 
                 key={post.id}
                 href={`/${post.slug}`}
-                className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-red-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20 flex flex-col"
+                className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-emerald-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-900/20 flex flex-col"
               >
                 <div className="h-48 bg-slate-800 relative overflow-hidden flex-shrink-0">
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-900/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500 z-10"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500 z-10"></div>
                   {post.image && (
                     <img src={post.image} alt={post.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
                   )}
                   <div className="absolute bottom-4 left-4 z-20">
-                    <span className="px-2 py-1 bg-red-600 text-xs font-bold rounded uppercase tracking-wider text-white">Hot</span>
+                    <span className="px-2 py-1 bg-emerald-600 text-xs font-bold rounded uppercase tracking-wider text-white">Hot</span>
                   </div>
                 </div>
                 <div className="p-6 flex flex-col flex-grow relative z-20">
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-red-400 transition-colors line-clamp-2">{post.title}</h3>
+                  <h3 className="text-xl font-bold mb-3 group-hover:text-emerald-400 transition-colors line-clamp-2">{post.title}</h3>
                   <p className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">{post.description}</p>
-                  <span className="text-red-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform mt-auto">
+                  <span className="text-emerald-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform mt-auto">
                     Read Article &rarr;
                   </span>
                 </div>

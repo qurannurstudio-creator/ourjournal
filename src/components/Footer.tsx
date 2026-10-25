@@ -8,21 +8,21 @@ export default function Footer() {
           <div className="flex items-center gap-2">
 
             <span className="font-bold text-xl tracking-tight text-white">
-              Modern<span className="text-red-500">Journal</span>
+              Algeria<span className="text-emerald-500">Times</span>
             </span>
           </div>
           
           <nav className="flex flex-wrap justify-center gap-4 sm:gap-8 text-sm font-medium text-slate-400">
-            <Link href="/about" className="hover:text-red-400 transition-colors">About Us</Link>
-            <Link href="/privacy" className="hover:text-red-400 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-red-400 transition-colors">Terms of Service</Link>
-            <Link href="/disclaimer" className="hover:text-red-400 transition-colors">Disclaimer</Link>
-            <Link href="/contact" className="hover:text-red-400 transition-colors">Contact Us</Link>
+            <Link href="/about" className="hover:text-emerald-400 transition-colors">About Us</Link>
+            <Link href="/privacy" className="hover:text-emerald-400 transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-emerald-400 transition-colors">Terms of Service</Link>
+            <Link href="/disclaimer" className="hover:text-emerald-400 transition-colors">Disclaimer</Link>
+            <Link href="/contact" className="hover:text-emerald-400 transition-colors">Contact Us</Link>
           </nav>
         </div>
         
         <p className="text-slate-600 text-sm">
-          &copy; {new Date().getFullYear()} Modern Journal. All rights reserved.
+          &copy; {new Date().getFullYear()} Algeria Times. All rights reserved.
         </p>
       </div>
     </footer>

@@ -128,7 +128,7 @@ function BatchRow({ batch, deleteBatch }: { batch: any; deleteBatch: (id: string
       </td>
       <td className="px-6 py-4 text-right space-x-3">
         <Link 
-          href={`/admin/batch-details?id=${batch.id}`}
+          href={`/adminetc/batch-details?id=${batch.id}`}
           className="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
         >
           View URLs

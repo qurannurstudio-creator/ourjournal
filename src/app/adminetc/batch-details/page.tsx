@@ -303,7 +303,7 @@ function BatchDetailsContent() {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-slate-900 mb-4">Batch Not Found</h2>
-        <button onClick={() => router.push('/admin/batches')} className="text-blue-600 hover:underline cursor-pointer">
+        <button onClick={() => router.push('/adminetc/batches')} className="text-blue-600 hover:underline cursor-pointer">
           &larr; Back to Batches
         </button>
       </div>
@@ -314,7 +314,7 @@ function BatchDetailsContent() {
     <div>
       <div className="mb-8">
         <button 
-          onClick={() => router.push('/admin/batches')} 
+          onClick={() => router.push('/adminetc/batches')} 
           className="inline-flex items-center text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-md mb-6 transition-colors cursor-pointer border border-slate-200 shadow-sm"
         >
           &larr; Back to Batches

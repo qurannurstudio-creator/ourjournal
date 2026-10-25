@@ -3,7 +3,7 @@ import LegalLayout from '@/components/LegalLayout';
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy policy and data protection guidelines for Modern Journal.",
+  description: "Privacy policy and data protection guidelines for Algeria Times.",
 };
 
 export default function PrivacyPage() {
@@ -13,7 +13,7 @@ export default function PrivacyPage() {
 
       <h2>1. Introduction</h2>
       <p>
-        Welcome to Modern Journal. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you.
+        Welcome to Algeria Times. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you.
       </p>
 
       <h2>2. The Data We Collect About You</h2>
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
 
       <h2>6. Contact Us</h2>
       <p>
-        If you have any questions about this privacy policy or our privacy practices, please contact us via email at <a href="mailto:privacy@modernjournal.info" className="text-red-400 hover:text-red-300">privacy@modernjournal.info</a>.
+        If you have any questions about this privacy policy or our privacy practices, please contact us via email at <a href="mailto:privacy@algeriatimes.info" className="text-emerald-400 hover:text-emerald-300">privacy@algeriatimes.info</a>.
       </p>
     </LegalLayout>
   );

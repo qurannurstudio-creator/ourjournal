@@ -8,11 +8,13 @@ export const SITE_URL = (
   'https://modernjournal.info/news'
 ).replace(/\/+$/, '');
 
+export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || 'Algeria Times';
+
 export const getSiteHostname = (): string => {
   try {
     return new URL(SITE_URL).hostname;
   } catch {
-    return 'modernjournal.info';
+    return 'algeriatimes.info';
   }
 };
 

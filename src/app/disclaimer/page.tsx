@@ -4,7 +4,7 @@ import { SITE_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: "Disclaimer",
-  description: "General disclaimer for the content published on Modern Journal.",
+  description: "General disclaimer for the content published on Algeria Times.",
 };
 
 export default function DisclaimerPage() {
@@ -16,7 +16,7 @@ export default function DisclaimerPage() {
 
       <h2>General Information</h2>
       <p>
-        The information provided by Modern Journal ("we," "us," or "our") on <a href={SITE_URL} className="text-red-400 hover:text-red-300">{displayHost}</a> (the "Site") is for general informational purposes only. All information on the Site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Site.
+        The information provided by Algeria Times ("we," "us," or "our") on <a href={SITE_URL} className="text-emerald-400 hover:text-emerald-300">{displayHost}</a> (the "Site") is for general informational purposes only. All information on the Site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Site.
       </p>
 
       <h2>External Links Disclaimer</h2>
@@ -38,7 +38,7 @@ export default function DisclaimerPage() {
       </p>
 
       <p>
-        If you require any more information or have any questions about our site's disclaimer, please feel free to contact us by email at <a href="mailto:contact@modernjournal.info" className="text-red-400 hover:text-red-300">contact@modernjournal.info</a>.
+        If you require any more information or have any questions about our site's disclaimer, please feel free to contact us by email at <a href="mailto:contact@algeriatimes.info" className="text-emerald-400 hover:text-emerald-300">contact@algeriatimes.info</a>.
       </p>
     </LegalLayout>
   );

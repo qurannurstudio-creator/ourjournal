@@ -24,8 +24,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         setIsAuthenticated(true);
-      } else if (pathname !== '/admin') {
-        router.push('/admin');
+      } else if (pathname !== '/adminetc') {
+        router.push('/adminetc');
       }
       setIsChecking(false);
     };
@@ -35,8 +35,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session);
-      if (!session && pathname !== '/admin') {
-        router.push('/admin');
+      if (!session && pathname !== '/adminetc') {
+        router.push('/adminetc');
       }
     });
 
@@ -104,41 +104,41 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
         <nav className="px-4 pb-6 space-y-1">
           <Link
-            href="/admin"
+            href="/adminetc"
             className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              pathname === '/admin' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              pathname === '/adminetc' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             Overview
           </Link>
           <Link
-            href="/admin/batches"
+            href="/adminetc/batches"
             className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              pathname.includes('/admin/batches') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              pathname.includes('/adminetc/batches') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             All Batches
           </Link>
           <Link
-            href="/admin/create-batch"
+            href="/adminetc/create-batch"
             className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              pathname === '/admin/create-batch' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              pathname === '/adminetc/create-batch' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             Create Batch
           </Link>
           <Link
-            href="/admin/indexing-history"
+            href="/adminetc/indexing-history"
             className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              pathname === '/admin/indexing-history' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              pathname === '/adminetc/indexing-history' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             Indexing History
           </Link>
           <Link
-            href="/admin/settings"
+            href="/adminetc/settings"
             className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              pathname === '/admin/settings' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              pathname === '/adminetc/settings' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             Settings

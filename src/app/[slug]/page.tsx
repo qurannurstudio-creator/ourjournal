@@ -2,7 +2,7 @@ import { getBlogPostBySlug, getBlogPosts } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import AutoRedirect from '@/components/AutoRedirect';
-import { SITE_URL } from '@/lib/config';
+import { SITE_URL, SITE_NAME } from '@/lib/config';
 
 // Generate static params for all slugs in the sheet
 export async function generateStaticParams() {
@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 "datePublished": post.date || new Date().toISOString(),
                 "author": {
                   "@type": "Person",
-                  "name": "Modern Journal"
+                  "name": SITE_NAME
                 }
               },
               {

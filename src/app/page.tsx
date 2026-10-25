@@ -8,8 +8,8 @@ import Navbar from '@/components/Navbar';
 import { SITE_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
-  title: "Modern Journal - Exclusive Trending Stories",
-  description: "Your premium source for the latest viral stories, in-depth analysis, and exclusive deep-dives into trending topics.",
+  title: "Algeria Times - Latest Breaking News & Trending Stories",
+  description: "Your trusted source for the latest news, insightful analysis, exclusive stories, and in-depth reports from Algeria Times.",
   alternates: {
     canonical: SITE_URL,
   },
@@ -46,32 +46,32 @@ export default async function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-red-600 selection:text-white">
+    <div className="min-h-screen bg-slate-950 text-slate-50 font-sans selection:bg-emerald-600 selection:text-white">
       <AutoRedirect />
       <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-red-600/20 rounded-full blur-3xl opacity-50 mix-blend-screen"></div>
-          <div className="absolute top-40 -left-40 w-96 h-96 bg-red-900/30 rounded-full blur-3xl opacity-50 mix-blend-screen"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-emerald-600/20 rounded-full blur-3xl opacity-50 mix-blend-screen"></div>
+          <div className="absolute top-40 -left-40 w-96 h-96 bg-emerald-950/40 rounded-full blur-3xl opacity-50 mix-blend-screen"></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Link href={navLinks[0]} className="inline-block py-1 px-3 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-semibold tracking-wider uppercase mb-6 hover:bg-red-500/20 hover:text-red-300 transition-colors">
+          <Link href={navLinks[0]} className="inline-block py-1 px-3 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold tracking-wider uppercase mb-6 hover:bg-emerald-500/20 hover:text-emerald-300 transition-colors">
             Breaking News & Exclusives
           </Link>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
             Uncover The Truth With <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-700">
-              Modern Journal
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-500">
+              Algeria Times
             </span>
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-slate-400 mb-10 leading-relaxed">
-            Your premium source for the latest viral stories, in-depth analysis, and exclusive deep-dives into topics that matter today.
+            Your trusted source for the latest breaking news, in-depth analysis, and exclusive deep-dives into topics that matter today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href={navLinks[0]} className="px-8 py-4 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:shadow-lg hover:shadow-red-600/30 hover:scale-105 transition-all duration-300 inline-block">
+            <Link href={navLinks[0]} className="px-8 py-4 rounded-full bg-gradient-to-r from-emerald-600 to-green-700 text-white font-semibold hover:shadow-lg hover:shadow-emerald-600/30 hover:scale-105 transition-all duration-300 inline-block">
               Read Latest Stories
             </Link>
             <Link href={`/${safeCards[0]?.slug}`} className="px-8 py-4 rounded-full bg-slate-800 text-white font-semibold hover:bg-slate-700 transition-all duration-300 border border-slate-700 hover:border-slate-600 inline-block">
@@ -85,7 +85,7 @@ export default async function Home() {
       <section className="py-20 bg-slate-900 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">Trending <span className="text-red-500">Now</span></h2>
+            <h2 className="text-3xl font-bold tracking-tight">Trending <span className="text-emerald-500">Now</span></h2>
             <div className="h-px bg-slate-800 flex-grow ml-8 hidden sm:block"></div>
           </div>
           
@@ -95,22 +95,22 @@ export default async function Home() {
               const imageUrl = post.image?.startsWith('http') ? post.image : (post.image ? `https://${post.image}` : 'https://picsum.photos/seed/placeholder/800/600');
               
               return (
-                <Link href={`/${post.slug}`} key={index} className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-red-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/20 block">
+                <Link href={`/${post.slug}`} key={index} className="group rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-emerald-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-900/20 block">
                   <div className="h-48 bg-slate-800 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-red-900/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/40 to-slate-900/80 group-hover:scale-110 transition-transform duration-500">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={imageUrl} alt={post.title} loading="lazy" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
                     </div>
                     <div className="absolute bottom-4 left-4">
-                      <span className="px-2 py-1 bg-red-600 text-xs font-bold rounded uppercase tracking-wider text-white">
+                      <span className="px-2 py-1 bg-emerald-600 text-xs font-bold rounded uppercase tracking-wider text-white">
                         {post.tags ? post.tags.split(',')[0].trim() : 'Exclusive'}
                       </span>
                     </div>
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-bold mb-3 group-hover:text-red-400 transition-colors line-clamp-2">{post.title}</h3>
+                    <h3 className="text-xl font-bold mb-3 group-hover:text-emerald-400 transition-colors line-clamp-2">{post.title}</h3>
                     <p className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">{post.description}</p>
-                    <span className="text-red-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform">
+                    <span className="text-emerald-500 font-medium text-sm inline-flex items-center group-hover:translate-x-1 transition-transform">
                       Read Article &rarr;
                     </span>
                   </div>
