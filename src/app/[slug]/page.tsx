@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: post.description,
     keywords: post.tags ? post.tags.split(',').map((t: string) => t.trim()) : [],
     alternates: {
-      canonical: `https://modernjournal.info/${slug}`,
+      canonical: `https://modernjournal.info/news/${slug}`,
     },
     openGraph: {
       title: post.title,
@@ -102,13 +102,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     "@type": "ListItem",
                     "position": 1,
                     "name": "Home",
-                    "item": "https://modernjournal.info"
+                    "item": "https://modernjournal.info/news"
                   },
                   {
                     "@type": "ListItem",
                     "position": 2,
                     "name": post.title,
-                    "item": `https://modernjournal.info/${slug}`
+                    "item": `https://modernjournal.info/news/${slug}`
                   }
                 ]
               }

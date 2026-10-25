@@ -1,0 +1,5 @@
+/ /news 301
+/robots.txt /robots.txt 200
+/sitemap.xml /sitemap.xml 200
+/news/* /news/:splat 200
+/* /news/:splat 301

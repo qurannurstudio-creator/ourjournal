@@ -13,7 +13,7 @@ export default function DisclaimerPage() {
 
       <h2>General Information</h2>
       <p>
-        The information provided by Modern Journal ("we," "us," or "our") on <a href="https://modernjournal.info" className="text-red-400 hover:text-red-300">modernjournal.info</a> (the "Site") is for general informational purposes only. All information on the Site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Site.
+        The information provided by Modern Journal ("we," "us," or "our") on <a href="https://modernjournal.info/news" className="text-red-400 hover:text-red-300">modernjournal.info/news</a> (the "Site") is for general informational purposes only. All information on the Site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Site.
       </p>
 
       <h2>External Links Disclaimer</h2>

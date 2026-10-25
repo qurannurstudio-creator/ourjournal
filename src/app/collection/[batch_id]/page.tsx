@@ -58,13 +58,13 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://modernjournal.info"
+                "item": "https://modernjournal.info/news"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Trending Stories",
-                "item": `https://modernjournal.info/collection/${batch_id}`
+                "item": `https://modernjournal.info/news/collection/${batch_id}`
               }
             ]
           })

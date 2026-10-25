@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap:"https://modernjournal.info/sitemap.xml",
+    sitemap: "https://modernjournal.info/news/sitemap.xml",
   };
 }

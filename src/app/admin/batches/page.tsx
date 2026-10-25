@@ -11,7 +11,7 @@ function BatchRow({ batch, deleteBatch }: { batch: any; deleteBatch: (id: string
   const [mainSiteStatus, setMainSiteStatus] = useState(batch.main_site_status || 'Not Sent');
 
   const copyUrl = () => {
-    const url = `https://modernjournal.info/collection/${batch.id}`;
+    const url = `https://modernjournal.info/news/collection/${batch.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

@@ -6,7 +6,7 @@ export const dynamic = 'force-static';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getBlogPosts();
-  const baseUrl = 'https://modernjournal.info';
+  const baseUrl = 'https://modernjournal.info/news';
 
   const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/${post.slug}`,

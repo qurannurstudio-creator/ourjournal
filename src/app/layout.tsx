@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://modernjournal.info'),
+  metadataBase: new URL('https://modernjournal.info/news'),
   title: {
     default: "Modern Journal - Exclusive Trending Stories",
     template: "%s | Modern Journal"
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://modernjournal.info',
+    url: 'https://modernjournal.info/news',
     siteName: 'Modern Journal',
     title: 'Modern Journal - Exclusive Trending Stories',
     description: 'Your premium source for the latest viral stories and exclusive deep-dives.',

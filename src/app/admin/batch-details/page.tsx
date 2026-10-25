@@ -18,7 +18,7 @@ function BatchDetailsContent() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [editName, setEditName] = useState('');
 
-  const MAIN_DOMAIN = 'https://modernjournal.info';
+  const MAIN_DOMAIN = 'https://modernjournal.info/news';
 
   const handleNameSave = async () => {
     if (editName.trim() === '' || editName === batch.name) {
