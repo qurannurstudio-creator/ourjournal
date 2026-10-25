@@ -4,6 +4,7 @@ import Link from 'next/link';
 import AutoRedirect from '@/components/AutoRedirect';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { SITE_URL } from '@/lib/config';
 
 export const dynamic = 'force-static';
 export const revalidate = false;
@@ -58,13 +59,13 @@ export default async function BatchCollectionPage({ params }: { params: Promise<
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://modernjournal.info/news"
+                "item": SITE_URL
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Trending Stories",
-                "item": `https://modernjournal.info/news/collection/${batch_id}`
+                "item": `${SITE_URL}/collection/${batch_id}`
               }
             ]
           })

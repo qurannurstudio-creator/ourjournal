@@ -1,12 +1,13 @@
 import { MetadataRoute } from 'next';
 import { getBlogPosts } from '@/lib/sheets';
 import { supabase } from '@/lib/supabase';
+import { SITE_URL } from '@/lib/config';
 
 export const dynamic = 'force-static';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getBlogPosts();
-  const baseUrl = 'https://modernjournal.info/news';
+  const baseUrl = SITE_URL;
 
   const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/${post.slug}`,

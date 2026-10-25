@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://modernjournal.info/news'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Modern Journal - Exclusive Trending Stories",
     template: "%s | Modern Journal"
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://modernjournal.info/news',
+    url: SITE_URL,
     siteName: 'Modern Journal',
     title: 'Modern Journal - Exclusive Trending Stories',
     description: 'Your premium source for the latest viral stories and exclusive deep-dives.',

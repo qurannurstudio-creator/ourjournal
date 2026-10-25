@@ -2,6 +2,7 @@ import { getBlogPostBySlug, getBlogPosts } from '@/lib/sheets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import AutoRedirect from '@/components/AutoRedirect';
+import { SITE_URL } from '@/lib/config';
 
 // Generate static params for all slugs in the sheet
 export async function generateStaticParams() {
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: post.description,
     keywords: post.tags ? post.tags.split(',').map((t: string) => t.trim()) : [],
     alternates: {
-      canonical: `https://modernjournal.info/news/${slug}`,
+      canonical: `${SITE_URL}/${slug}`,
     },
     openGraph: {
       title: post.title,
@@ -102,13 +103,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     "@type": "ListItem",
                     "position": 1,
                     "name": "Home",
-                    "item": "https://modernjournal.info/news"
+                    "item": SITE_URL
                   },
                   {
                     "@type": "ListItem",
                     "position": 2,
                     "name": post.title,
-                    "item": `https://modernjournal.info/news/${slug}`
+                    "item": `${SITE_URL}/${slug}`
                   }
                 ]
               }

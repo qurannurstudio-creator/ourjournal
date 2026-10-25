@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useSearchParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { SITE_URL } from '@/lib/config';
 
 function BatchDetailsContent() {
   const searchParams = useSearchParams();
@@ -18,7 +19,7 @@ function BatchDetailsContent() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [editName, setEditName] = useState('');
 
-  const MAIN_DOMAIN = 'https://modernjournal.info/news';
+  const MAIN_DOMAIN = SITE_URL;
 
   const handleNameSave = async () => {
     if (editName.trim() === '' || editName === batch.name) {

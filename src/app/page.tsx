@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
+import { SITE_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: "Modern Journal - Exclusive Trending Stories",
   description: "Your premium source for the latest viral stories, in-depth analysis, and exclusive deep-dives into trending topics.",
   alternates: {
-    canonical: 'https://modernjournal.info/news',
+    canonical: SITE_URL,
   },
 };
 

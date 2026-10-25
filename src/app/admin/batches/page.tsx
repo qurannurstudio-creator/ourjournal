@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { SITE_URL } from '@/lib/config';
 
 function BatchRow({ batch, deleteBatch }: { batch: any; deleteBatch: (id: string) => void }) {
   const [copied, setCopied] = useState(false);
@@ -11,7 +12,7 @@ function BatchRow({ batch, deleteBatch }: { batch: any; deleteBatch: (id: string
   const [mainSiteStatus, setMainSiteStatus] = useState(batch.main_site_status || 'Not Sent');
 
   const copyUrl = () => {
-    const url = `https://modernjournal.info/news/collection/${batch.id}`;
+    const url = `${SITE_URL}/collection/${batch.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

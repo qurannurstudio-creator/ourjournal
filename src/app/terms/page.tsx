@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import LegalLayout from '@/components/LegalLayout';
+import { SITE_URL } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -13,7 +14,7 @@ export default function TermsPage() {
 
       <h2>1. Terms</h2>
       <p>
-        By accessing this Website, accessible from https://modernjournal.info/news, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this site. The materials contained in this Website are protected by copyright and trade mark law.
+        By accessing this Website, accessible from {SITE_URL}, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this site. The materials contained in this Website are protected by copyright and trade mark law.
       </p>
 
       <h2>2. Use License</h2>
