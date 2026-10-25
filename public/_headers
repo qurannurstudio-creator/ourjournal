@@ -1,0 +1,12 @@
+/news/admin*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+/news/admin/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+/admin*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+/admin/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+/news/adminetc*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+/news/adminetc/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0

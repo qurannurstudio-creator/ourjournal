@@ -1,3 +1,10 @@
+# Force 404 for deprecated /admin paths so they cannot be accessed
+/news/admin/* /news/404 404!
+/news/admin /news/404 404!
+/admin/* /news/404 404!
+/admin /news/404 404!
+
+# Standard news routing
 / /news/ 301
 /news /news/ 301
 /news/ /index.html 200
